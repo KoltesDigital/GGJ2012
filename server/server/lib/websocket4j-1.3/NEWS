@@ -1,0 +1,20 @@
+What is new in GNU WebSocket4J 1.3:
+
+- WebSocket4J is now part of the GNU project (http://gnu.org).
+
+- License changed from GNU LGPLv3+ to GNU GPLv2 (or later) with linking
+  exception (same license that is used by GNU Classpath project).
+
+- New build system.  GNU WebSocket4J now uses GNU Autoconf and GNU Automake, and
+  can be installed by standard './configure && make && make install'.
+  Additionally it can be installed in platform specific way for RPM and DEB
+  based distributions.
+
+- Documentation includes GNU WebSocket Reference Manual along JavaDoc.
+
+- Sent and received messages are forced to use UTF-8 encoding, so it should work
+  properly on platforms that have different default string encoding.
+
+- Fixed bug when client didn't want to accept server's perfectly fine
+  Status-line (fixes several compatibility issues with other WebSocket
+  implementations).

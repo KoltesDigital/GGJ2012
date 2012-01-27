@@ -1,0 +1,107 @@
+Copyright (C) 2010  Marek Aaron Sapota
+See the end of the file for license conditions.
+
+=====================
+ General information
+=====================
+
+This directory tree holds version @PACKAGE_VERSION@ of GNU WebSocket4J, Java
+library implementing WebSocket protocol.
+
+GNU WebSocket4J is licensed under the terms of GNU GPLv2 (or later) with linking
+exception.  There is a copy of this license in COPYING file.
+
+See the file NEWS for information on new features and other user-visible changes
+in recent versions of GNU WebSocket4J.  List of all changes (auto generated from
+GNU Bazaar branch history) is available in ChangeLog file.
+
+If you encounter bugs in this release, please report them to
+https://bugs.launchpad.net/websocket4j.  Your reports will make GNU WebSocket4J
+run better on various systems that it's not normally tested on.
+
+==============
+ Installation
+==============
+
+GNU WebSocket4J can be built and installed in several ways.  The default is GNU
+style installation that follows GNU Coding Standards.  GNU WebSocket4J can also
+be installed using system package manager for RPM and DEB based distributions.
+After running the configure script you will be given a list of possible build
+types (gnu possibility will always be present), you can choose different build
+type than default by providing BUILD_TYPE variable to configure script (for
+example ./configure BUILD_TYPE=rpm).  The next chapters cover different
+installation possibilities in detail.
+
+ GNU style installation
+========================
+
+Just standard './configure && make && make install' should configure, build and
+install this package.  The file INSTALL in this directory explains all options
+possible for a GNU style installation.
+
+ DEB and RPM based installation
+================================
+
+Distribution specific installation option is meant to install the library in
+standard place for jars in your distribution.  It is done by putting the jar
+into a DEB or RPM package and installing it using rpm or dpkg package manager.
+
+'./configure BUILD_TYPE=my_build_type && make' will create the packages in the
+choosen format and place them in 'package' directory, 'make install' will
+install this packages.  You can use 'make uninstall' later to remove this
+package from your system.
+
+WARNING: This installation type places files in the right places for your
+distribution, it completely ignores several configure options like '--prefix'
+and other ones specifying installation path.  Therefore it does NOT follow all
+of the GNU coding standards.
+
+ Why should I care where the jars go?
+--------------------------------------
+
+Some distributions provide utilities for working with Java libraries (like
+build_classpath on RPM based distributions), but they only work if jars are
+installed in the right place.
+
+=====================
+ Directory structure
+=====================
+
+This directory has several subdirectories:
+
+'src'      holds Java sources for GNU WebSocket4J
+'rpm'      holds files needed for building GNU WebSocket4J on RPM based systems
+'debian '  holds files needed for building GNU WebSocket4J on DEB based systems
+'doc'      holds GNU WebSocket4J Reference Manual
+'javadoc'  holds API documentation for GNU WebSocket4J
+
+====================
+ License conditions
+====================
+
+This file is part of GNU WebSocket4J.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+As a special exception, the copyright holders of this library give you
+permission to link this library with independent modules to produce an
+executable, regardless of the license terms of these independent modules,
+and to copy and distribute the resulting executable under terms of your choice,
+provided that you also meet, for each linked independent module, the terms and
+conditions of the license of that module. An independent module is a module
+which is not derived from or based on this library. If you modify this library,
+you may extend this exception to your version of the library, but you are not
+obligated to do so. If you do not wish to do so, delete this exception
+statement from your version.

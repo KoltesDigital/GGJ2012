@@ -1,0 +1,607 @@
+2010-09-24  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* HACKING:
+
+	Write how to avoid Ruby dependency in HACKING
+
+2010-09-24  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* .bzrignore:
+	* distribute.sh:
+
+	Better distribute.sh.  Now also generates manual in several different formats
+
+2010-09-24  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* HACKING:
+	* autoclean.sh:
+	* autogen.sh:
+	* configure.ac:
+	* README:
+	* README.in:
+
+	README is templated and doesn't have package version as string.
+	
+	autoclean and autogen stop on first error
+
+2010-09-23  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* genauthors.rb:
+	* genauthors.py:
+	* HACKING:
+	* autogen.sh:
+
+	Modified genauthors script based on annotate.
+	
+	Move from python to ruby, because lxml couldn't parse bzr xmlannotate output.
+
+2010-09-14  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* distribute.sh:
+	* .bzrignore:
+	* HACKING:
+	* autoclean.sh:
+	* autogen.sh:
+
+	Added distribute.sh script
+
+2010-09-13  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* NEWS:
+
+	Updated news for v1.3
+
+2010-09-13  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* doc/websocket4j.texi:
+
+	Minimal changes to documentation
+
+2010-09-13  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* HACKING:
+
+	Add list of files that should be altered on version change
+
+2010-09-13  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* genauthors.py:
+
+	User aliases instead of magic user/email decrypting in genauthors
+
+2010-09-13  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* HACKING:
+	* README:
+
+	Added some things to README
+
+2010-09-07  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* debian/control.in:
+	* rpm/websocket4j.spec.in:
+
+	Update license notice for deb and rpm spec files
+
+2010-09-05  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* Makefile.am:
+
+	Put javadoc in distribution tar
+
+2010-09-05  Marek Aaron Sapota  <maarons@gnu.org>
+
+	* COPYING.LESSER:
+	* COPYING:
+	* HACKING:
+	* Makefile.am:
+	* README:
+	* autoclean.sh:
+	* build.xml.in:
+	* configure.ac:
+	* debian/control.in:
+	* doc/Makefile.am:
+	* doc/websocket4j.texi:
+	* genauthors.py:
+	* rpm/websocket4j.spec.in:
+	* src/websocket4j/AbstractWebSocket.java:
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/examples/Echo.html:
+	* src/websocket4j/examples/Echo.js:
+	* src/websocket4j/examples/EchoClient.java:
+	* src/websocket4j/examples/EchoServer.java:
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Changed license to GPLv2 (or later) with linking exception
+	WebSocket4J is now a GNU package
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* configure.ac:
+	* doc/Makefile.am:
+
+	Fix info install/uninstall blocking
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+
+	Fix rpm clean
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* configure.ac:
+	* doc/Makefile.am:
+
+	Don't uninstall info if in deb/rpm mode
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+
+	Fix typo in makefile
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* Makefile.am:
+	* rpm/websocket4j.spec.in:
+
+	More rpm fixes
+
+2010-08-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+
+	Fix rpm build
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* autoclean.sh:
+
+	Update autoclean to remove files from doc, not documentation
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* configure.ac:
+	* doc/Makefile.am:
+
+	Supress info installation with deb and rpm
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* HACKING:
+
+	Note that bzr-xmloutput is needed for autogen
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* doc/dirs.texi.in:
+	* .bzrignore:
+	* configure.ac:
+	* doc/websocket4j.texi:
+
+	Fix srcdir configure option
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* Makefile.am:
+	* build.xml.in:
+	* configure.ac:
+	* documentation:
+	* doc:
+
+	Rename documentation to doc and doc to javadoc
+
+2010-08-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* documentation/websocket4j.texi:
+	* src/websocket4j/examples/Echo.html:
+	* src/websocket4j/examples/EchoClient.java:
+	* src/websocket4j/examples/EchoServer.java:
+
+	Added examples to manual
+
+2010-08-24  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .classpath:
+	* .project:
+	* .settings:
+	* .settings/org.eclipse.jdt.core.prefs:
+
+	Remove eclipse stuff
+
+2010-08-23  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* src/websocket4j/client/WebSocket.java:
+
+	Accept whatever Status-line reason server sends
+
+2010-08-23  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+
+	Install javadoc with gnu style install
+
+2010-08-23  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* HACKING:
+
+	More info in hacking
+
+2010-08-23  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* autoclean.sh:
+
+	Update autoclean to clean up documentation directory, update bzrignore
+
+2010-08-23  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* documentation:
+	* documentation/Makefile.am:
+	* documentation/fdl-1.3.texi:
+	* documentation/websocket4j.texi:
+	* Makefile.am:
+	* autogen.sh:
+	* configure.ac:
+	* genauthors.py:
+
+	TexInfo documentation
+
+2010-08-22  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* src/websocket4j/AbstractWebSocket.java:
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Minor JavaDoc corrections
+
+2010-08-22  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* HACKING:
+	* README:
+
+	Adding readme for developers
+
+2010-08-22  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* configure.ac:
+
+	Check if javadoc is available
+
+2010-08-22  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* genauthors.py:
+	* AUTHORS:
+	* .bzrignore:
+	* autoclean.sh:
+	* autogen.sh:
+
+	Auto generate AUTHORS
+
+2010-08-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* Makefile.am:
+
+	Fix uninstall task
+
+2010-08-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* INSTALL:
+	* Makefile.am:
+	* README:
+	* autoclean.sh:
+	* build.xml.in:
+	* configure.ac:
+	* src/websocket4j/AbstractWebSocket.java:
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/examples/Echo.html:
+	* src/websocket4j/examples/Echo.js:
+	* src/websocket4j/examples/EchoClient.java:
+	* src/websocket4j/examples/EchoServer.java:
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Installation instructions
+
+2010-08-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* README:
+
+	First README version
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+	* build.xml.in:
+
+	Fix make distcheck
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* ChangeLog:
+	* .bzrignore:
+	* Makefile.am:
+	* autoclean.sh:
+	* autogen.sh:
+
+	Auto generate ChangeLog from bzr
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile.am:
+	* build.xml.in:
+	* configure.ac:
+	* debian/changelog.in:
+	* debian/control.in:
+	* rpm/websocket4j.spec.in:
+
+	Don't duplicate things - put it in configure.ac instead
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+	* Makefile.am:
+	* configure.ac:
+	* build.xml:
+	* build.xml.in:
+	* debian/compat:
+	* debian/compat.in:
+
+	Force user to run configure before ant
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* src/websocket4j/AbstractWebSocket.java:
+
+	Force UTF-8 for sent text
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* Makefile.am:
+
+	Fix rpm uninstall target
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/AbstractWebSocket.java:
+
+	Force utf-8 for messages
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* .bzrignore:
+	* build.xml:
+
+	Fix ant warnings
+
+2010-08-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* AUTHORS:
+	* ChangeLog:
+	* INSTALL:
+	* NEWS:
+	* README:
+	* autoclean.sh:
+	* autogen.sh:
+	* build.xml:
+	* configure.ac:
+	* Makefile.in:
+	* Makefile.am:
+
+	Make use of automake
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* configure.ac:
+	* Makefile.in:
+	* debian/changelog:
+	* debian/changelog.in:
+	* debian/control:
+	* debian/control.in:
+	* rpm/websocket4j.spec:
+	* rpm/websocket4j.spec.in:
+
+	First configure.ac version
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile:
+	* Makefile.in:
+
+	Prepare makefile for autoconf
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* Makefile:
+
+	More generic makefile
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* .bzrignore:
+
+	Ignore files generated during build-deb
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* debian:
+	* debian/changelog:
+	* debian/compat:
+	* debian/control:
+	* .bzrignore:
+	* Makefile:
+
+	Makefile changes to build deb packages
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* build.xml:
+	* rpm/websocket4j.spec:
+
+	Add ant all task that makes a jar and doc
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com>
+
+	* rpm/websocket4j.spec:
+
+	Improve rpm package descriptions
+
+2010-08-18  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* Makefile:
+	* build.xml:
+	* rpm:
+	* rpm/websocket4j.spec:
+
+	Makefile for creating rpm packages
+
+2010-08-10  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/examples/EchoServer.java:
+
+	Improved echo server example
+
+2010-08-03  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Better key string generation
+
+2010-08-03  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Javadoc
+
+2010-08-02  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/client:
+	* src/websocket4j/client/WebSocket.java:
+	* src/websocket4j/examples/EchoClient.java:
+	* src/websocket4j/AbstractWebSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+	* src/websocket4j/examples/Echo.java:
+	* src/websocket4j/examples/EchoServer.java:
+
+	Client side of web socket protocol implemented
+
+2010-08-02  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/AbstractWebSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Moved most common stuff from server.WebSocket to AbstractWebSocket so it can be used as base for client.WebSocket
+
+2010-08-02  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/examples/Echo.html:
+	* src/websocket4j/examples/Echo.js:
+	* src/websocket4j/examples/Echo.java:
+
+	HTML5 client for the echo example
+
+2010-08-01  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/examples/Echo.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Store Request-URI, so user of the library can decide what to do depending what URI client requested.
+
+2010-08-01  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Obey server socket so timeout and limit handshake time.
+
+2010-08-01  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Cosmetic changes
+
+2010-07-27  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebServerSocket.java:
+
+	Don't use simple types when not needed
+
+2010-07-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebServerSocket.java:
+
+	setSoTimeout for server socket
+
+2010-07-25  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebSocket.java:
+
+	If client sends cookies, resend them back as they are.
+
+2010-07-24  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+
+	Nothing special, just some comment changes
+
+2010-07-24  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/server:
+	* src/websocket4j/server/WebServerSocket.java:
+	* src/websocket4j/server/WebSocket.java:
+	* src/websocket4j/WebServerSocket.java:
+	* src/websocket4j/WebSocket.java:
+	* src/websocket4j/examples/Echo.java:
+
+	Moved files to server package
+
+2010-07-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/examples/Echo.java:
+
+	Handle multiple connections in Echo example
+
+2010-07-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* src/websocket4j/WebSocket.java:
+	* src/websocket4j/examples/Echo.java:
+
+	Small changes.  Socket is closed when closing handshake is received.
+
+2010-07-20  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* .bzrignore:
+	* src/websocket4j/WebServerSocket.java:
+	* src/websocket4j/WebSocket.java:
+	* src/websocket4j/examples/Echo.java:
+
+	Updated JavaDoc.  Handshake errors are reported as IOExceptions.
+
+2010-07-19  Marek Aaron Sapota  <projects.gg.aaron@gmail.com
+
+	* .bzrignore:
+	* .classpath:
+	* .project:
+	* .settings:
+	* .settings/org.eclipse.jdt.core.prefs:
+	* COPYING:
+	* COPYING.LESSER:
+	* src:
+	* src/websocket4j:
+	* src/websocket4j/WebServerSocket.java:
+	* src/websocket4j/WebSocket.java:
+	* src/websocket4j/examples:
+	* src/websocket4j/examples/Echo.java:
+
+	Initial commit.  First working version.
+
