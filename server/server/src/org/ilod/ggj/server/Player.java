@@ -8,4 +8,5 @@ public interface Player {
 	Team getTeam();
 	void setDirection(String direction);
 	void kill();
+	void move(long delta);
 }

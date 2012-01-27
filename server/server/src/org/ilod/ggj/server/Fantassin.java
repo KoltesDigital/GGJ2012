@@ -73,4 +73,9 @@ public class Fantassin implements Player {
 		dead = true;
 		this.getTeam().getGame().addEvent(new KillEvent(this));
 	}
+	
+	public void move(long delta) {
+		x += xMove * delta * .03;
+		y += yMove * delta * .03;
+	}
 }

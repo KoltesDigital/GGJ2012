@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Game {
+public class Game implements Runnable {
 	private final Team brocoli = new Team("brocoli", this);
 	private final Team carrote = new Team("carrote", this);
 	private final Queue<Event> events = new ConcurrentLinkedQueue<>();
@@ -19,7 +19,7 @@ public class Game {
 		events.add(e);
 	}
 	
-	public void processEvents() {
+	private void processEvents() {
 		Iterator<Event> iter = events.iterator();
 		while (iter.hasNext()) {
 			Event e = iter.next();
@@ -43,5 +43,22 @@ public class Game {
 	
 	public long getTimestamp() {
 		return timestamp;
+	}
+	
+	private void processTurn() {
+		long ts = System.currentTimeMillis();
+		long delta = ts - timestamp;
+		this.timestamp = ts;
+		this.processEvents();
+		this.processMoves(delta);
+	}
+	
+	private void processMoves(long delta) {
+		brocoli.processMoves(delta);
+		carrote.processMoves(delta);
+	}
+	
+	public void run() {
+		for (;;) processTurn();
 	}
 }

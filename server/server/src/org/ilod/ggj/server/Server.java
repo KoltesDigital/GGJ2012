@@ -12,6 +12,7 @@ public class Server {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
+		new Thread(game).start();
 		WebServerSocket wss = new WebServerSocket(8133);
 		for (;;) {
 			new Thread(new Client(game, wss.accept(), id++));

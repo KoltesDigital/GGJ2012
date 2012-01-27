@@ -15,6 +15,12 @@ public class Team {
 		this.game = game;
 	}
 	
+	public void processMoves(long delta) {
+		for (Player p : players.values()) {
+			p.move(delta);
+		}
+	}
+	
 	public Game getGame() {
 		return game;
 	}
