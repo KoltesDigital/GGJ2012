@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ import net.tootallnate.websocket.WebSocket;
 import net.tootallnate.websocket.WebSocketServer;
 
 public class Server extends WebSocketServer {
-	private int id = 0;
+	private final AtomicInteger id = new AtomicInteger();
 	private final Queue<Event> events = new ConcurrentLinkedQueue<Event>();
 	private final Team brocoli = new Team(0, this);
 	private final Team carrote = new Team(1, this);
@@ -69,7 +70,10 @@ public class Server extends WebSocketServer {
 	
 	@Override
 	public void onClientOpen(WebSocket conn) {
-		events.add(new SpawnEvent(conn, getTeamToRenforce(), id++));
+		events.add(new ListServEvent(conn, this));
+		int n = id.getAndIncrement();
+		events.add(new SpawnEvent(conn, getTeamToRenforce(), n));
+		events.add(new MyIdEvent(conn, n));
 	}
 	
 	@Override
@@ -92,6 +96,25 @@ public class Server extends WebSocketServer {
 			throw new RuntimeException(e);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
+		}
+	}
+	
+	public void sendServ(WebSocket ws) {
+		JSONObject jo = new JSONObject();
+		for (Player p : players.values()) {
+			try {
+				jo.put("type", "spawn");
+				jo.put("id", p.getId());
+				jo.put("team", p.getTeam().getId());
+				jo.put("x", p.getX());
+				jo.put("y", p.getY());
+				jo.put("work", p.getType());
+				ws.send(jo.toString());
+			} catch (JSONException e) {
+				throw new RuntimeException(e);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 	
