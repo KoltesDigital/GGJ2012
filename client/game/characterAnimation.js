@@ -1,7 +1,8 @@
 goog.provide('CharacterAnimation');
 
 goog.require('goog.events');
-goog.require('lime.ASSETS.fantassin_c.zwoptex');;
+goog.require('lime.ASSETS.fantassin_b.zwoptex');
+goog.require('lime.ASSETS.fantassin_c.zwoptex');
 goog.require('lime.parser.ZWOPTEX');
 goog.require('lime.SpriteSheet');
 goog.require('lime.animation.KeyframeAnimation');
