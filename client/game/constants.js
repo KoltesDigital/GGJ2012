@@ -19,7 +19,13 @@ goog.exportSymbol('constants.directions', {
 	left: 3
 });
 
+goog.exportSymbol('constants.farDistanceSquared', 2500);
+
 goog.exportSymbol('constants.imagesPath', 'images/');
+
+goog.exportSymbol('constants.nearDistanceSquared', 50);
+
+goog.exportSymbol('constants.pingInterval', 2000);
 
 goog.exportSymbol('constants.screenHeight', 768);
 

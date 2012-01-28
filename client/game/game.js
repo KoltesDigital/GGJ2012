@@ -13,6 +13,8 @@ goog.require('SocketMock');
 
 game.players = {};
 
+game.arrows = {};
+
 game.addPlayer = function(player) {
 	this.players[player.id] = player;
 	player.addToLayer(game.playersLayer);
@@ -42,7 +44,9 @@ game.setCurrentPlayer = function(id) {
 		var leftKey, rightKey, upKey, downKey;
 		var directionX = 0, directionY = 0, direction;
 		var cameraX = 0, cameraY = 0;
-
+		
+		deltaTime = 50;
+		
 		goog.events.listen(window, ['keydown'], function(e) {
 			//console.log(e.keyCode);
 			modif = false;
@@ -163,6 +167,13 @@ game.setCurrentPlayer = function(id) {
 			}
 		});
 		
+		this.ping = function() {
+			socket.send({
+				type: "move",
+				data: Date.now()
+			});
+		};
+		this.ping();
 	}
 };
 
@@ -174,6 +185,35 @@ game.changeCharacter = function() {
 	});
 	scene.appendChild(this.playersLayer);
 	scene.appendChild(this.currentPlayerLayer);
+};
+
+game.pong = function(obj) {
+	deltaTime = (Date.now() - obj.data) / 2;
+	setTimeout(this.ping, constants.pingInterval);
+};
+
+game.addArrow = function(id, x, y, vx, vy) {
+	
+};
+
+game.removeArrow = function(id) {
+	
+};
+
+game.hit = function(id) {
+	
+};
+
+game.death = function(id) {
+	
+};
+
+game.hideCharacter = function(id) {
+	
+};
+
+game.showCharacter = function(id) {
+	
 };
 
 game.start = function() {

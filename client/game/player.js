@@ -14,7 +14,7 @@ Player = function(id, character, team) {
 	this.walking = false;
 	this.attacking = false;
 	this.direction = constants.directions.right;
-	this.directionX = 1;
+	this.directionX = 0;
 	this.directionY = 0;
 
 	this.sprite = new lime.Sprite().setAnchorPoint(0.203125, 0.48046875);
@@ -63,17 +63,27 @@ Player.prototype.setDirection = function(x, y, direction) {
 };
 
 Player.prototype.setPosition = function(x, y) {
-	this.x = x;
-	this.y = y;
-	this.sprite.setPosition(x, y);
+	this.targetX = x;
+	this.targetY = y;
 };
 
 Player.prototype.update = function(dt) {
-	if (this.walking) {
-		this.x += this.directionX * constants.characterSpeed * dt;
-		this.y += this.directionY * constants.characterSpeed * dt;
-		this.sprite.setPosition(this.x, this.y);
+	var step = constants.characterSpeed * dt;
+	this.targetX += this.directionX * step;
+	this.targetY += this.directionY * step;
+	
+	var dx = this.targetX - this.x;
+	var dy = this.targetY - this.y;
+	var distance2 = dx*dx + dy*dy;
+	if (distance2 < constants.farDistanceSquared && distance2 > step * step * 1.05) {
+		var ratio = step / Math.sqrt(distance2);
+		this.x += dx * ratio;
+		this.y += dy * ratio;
+	} else {
+		this.x = this.targetX;
+		this.y = this.targetY;
 	}
+	this.sprite.setPosition(this.x, this.y);
 };
 
 Player.prototype.startAttacking = function() {
@@ -82,4 +92,11 @@ Player.prototype.startAttacking = function() {
 
 Player.prototype.stopAttacking = function() {
 	this.animation.setState('idle');
+};
+
+Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
+	var step = constants.characterSpeed * (time + deltaTime - Date.now());
+	this.setDirection(dx, dy);
+	this.targetX = x + this.directionX * step;
+	this.targetY = y + this.directionY * step;
 };
