@@ -8,9 +8,39 @@ goog.require('lime.Sprite');
 goog.require('CharacterAnimation');
 goog.require('constants');
 
-Player = function(x, y, character, team) {
+var players = new Object();
+
+var sock = new WebSocket('ws://sd-24732.dedibox.fr:8133');
+sock.onopen = function(evt) {
+
+};
+sock.onclose = function(evt) {
+
+};
+sock.onerror = function(evt) {
+
+};
+sock.onmessage = function(evt) {
+	obj = eval('('+evt.data+')');
+	switch (obj.type) {
+	case "spawn":
+		new Player(obj.id, obj.x, obj.y, obj.work, obj.team);
+		break;
+	case "move":
+		players['id'+obj.id].setPosition(obj.x, obj.y);
+		players['id'+obj.id].setDirection(obj.xMove, obj.yMove);
+		break;
+	case "dead":
+		players['id'+obj.id].removeFromGame();
+		break;
+		
+	}
+};
+
+Player = function(id, x, y, character, team) {
 	this.x = x;
 	this.y = y;
+	this.id = id;
 	this.character = character;
 	this.team = team;
 
@@ -23,15 +53,24 @@ Player = function(x, y, character, team) {
 	this.sprite = new lime.Sprite().setPosition(x, y);
 	this.animation = new CharacterAnimation(character, team).setDirection(this.direction);
 	this.sprite.runAction(this.animation);
+	
+	players['id'+this.id] = this;
+	this.addToScene(); // A enlever
 };
 
 Player.prototype.addToScene = function() {
+	console.log(this);
 	playersLayer.appendChild(this.sprite);
 };
 
 Player.prototype.removeFromScene = function() {
 	playersLayer.removeChild(this.sprite);
 };
+
+Player.prototype.removeFromGame = function() {
+	this.removeFromScene();
+	delete players['id'+this.id];
+}
 
 Player.prototype.setDirection = function(x, y) {
 	this.walking = (x != 0 || y != 0);
@@ -54,10 +93,15 @@ Player.prototype.setDirection = function(x, y) {
 		} else {
 			this.direction = constants.directions.up;
 		}
-		
 		this.animation.setDirection(this.direction);
 	}
 };
+
+Player.prototype.setPosition = function(x, y) {
+	this.x = x;
+	this.y = y;
+	this.sprite.setPosition(x, y);
+}
 
 Player.prototype.update = function(dt) {
 	if (this.walking) {
@@ -74,8 +118,8 @@ game.start = function() {
 	playersLayer = new lime.Layer();
 	scene.appendChild(playersLayer);
 
-	var player = new Player(256, 256, constants.characters.lancer, constants.teams.carrot);
-	player.addToScene();
+	//var player = new Player(0, 256, 256, constants.characters.lancer, constants.teams.carrot);
+	//player.addToScene();
 
 	var leftKey, rightKey, upKey, downKey;
 	var directionX = 0, directionY = 0;
@@ -83,25 +127,40 @@ game.start = function() {
 
 	goog.events.listen(window, ['keydown'], function(e) {
 		//console.log(e.keyCode);
+		modif = false;
 		switch (e.keyCode) {
 		case 37: //left
-			leftKey = true;
-			directionX = -1;
+			if (directionX != -1) {
+				leftKey = true;
+				modif = true;
+				directionX = -1;
+			}
 			break;
 		case 38: //up
-			upKey = true;
-			directionY = -1;
+			if (directionY != -1) {
+				upKey = true;
+				modif = true;
+				directionY = -1;
+			}
 			break;
 		case 39: //right
-			rightKey = true;
-			directionX = 1;
+			if (directionX != 1) {
+				rightKey = true;
+				modif = true;
+				directionX = 1;
+			}
 			break;
 		case 40: //down
-			downKey = true;
-			directionY = 1;
+			if (directionY != 1) {
+				downKey = true;
+				modif = true;
+				directionY = 1;
+			}
 			break;
 		}
-		player.setDirection(directionX, directionY);
+		if (modif)
+			sock.send(JSON.stringify({"type": "move", "xMove": directionX, "yMove": directionY}));
+		//player.setDirection(directionX, directionY);
 	});
 
 	goog.events.listen(window, ['keyup'], function(e) {
@@ -123,13 +182,17 @@ game.start = function() {
 			directionY = (upKey ? -1 : 0);
 			break;
 		}
-		player.setDirection(directionX, directionY);
+		sock.send(JSON.stringify({"type": "move", "xMove": directionX, "yMove": directionY}));
+		//player.setDirection(directionX, directionY);
 	});
 
 	lime.scheduleManager.schedule(function(dt) {
-		player.update(dt);
-
-		var targetX = player.x;
+		for (key in players) {
+			child = players[key];
+			child.update(dt);
+		}
+		
+		/*var targetX = player.x;
 		if (directionX != 0) {
 			targetX += directionX * constants.cameraGap;
 		} else if (player.direction == constants.directions.left) {
@@ -150,7 +213,7 @@ game.start = function() {
 		cameraX += (targetX - cameraX) * constants.cameraRatio * dt;
 		cameraY += (targetY - cameraY) * constants.cameraRatio * dt;
 		console.log(cameraX + constants.screenWidth / 2, cameraY + constants.screenHeight / 2);
-		playersLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
+		playersLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);*/
 	});
 	
 	/*

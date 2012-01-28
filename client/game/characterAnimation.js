@@ -17,8 +17,8 @@ var characterAnimations = {
 var sheets = [
               [
                {
-            	   filename: 'fantassin_b',
-            	   //metadata: lime.ASSETS.fantassin_b.zwoptex
+            	   filename: 'fantassin_c.png',
+            	   metadata: lime.ASSETS.fantassin_c.zwoptex
                },
                {
             	   filename: 'fantassin_c.png',
