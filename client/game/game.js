@@ -40,6 +40,10 @@ Player.prototype.setDirection = function(x, y) {
 	this.animation.setWalking(this.walking);
 	
 	if (this.walking) {
+		var norm = Math.sqrt(x*x + y*y);
+		this.directionX /= norm;
+		this.directionY /= norm;
+		
 		var direction;
 		if (x > 0 && Math.abs(x) >= Math.abs(y)) {
 			direction = constants.directions.right;
@@ -73,21 +77,26 @@ game.start = function() {
 	var player = new Player(256, 256, constants.characters.lancer, constants.teams.carrot);
 	player.addToScene();
 
+	var leftKey, rightKey, upKey, downKey;
 	var directionX = 0, directionY = 0;
 
 	goog.events.listen(document, ['keydown'], function(e) {
 		//console.log(e.keyCode);
 		switch (e.keyCode) {
 		case 37: //left
+			leftKey = true;
 			directionX = -1;
 			break;
 		case 38: //up
+			upKey = true;
 			directionY = -1;
 			break;
 		case 39: //right
+			rightKey = true;
 			directionX = 1;
 			break;
 		case 40: //down
+			downKey = true;
 			directionY = 1;
 			break;
 		}
@@ -97,24 +106,20 @@ game.start = function() {
 	goog.events.listen(document, ['keyup'], function(e) {
 		switch (e.keyCode) {
 		case 37: //left
-			if (directionX == -1) {
-				directionX = 0;
-			}
+			leftKey = false;
+			directionX = (rightKey ? 1 : 0);
 			break;
 		case 38: //up
-			if (directionY == -1) {
-				directionY = 0;
-			}
+			upKey = false;
+			directionY = (downKey ? 1 : 0);
 			break;
 		case 39: //right
-			if (directionX == 1 && directionY == 0) {
-				directionX = 0;
-			}
+			rightKey = false;
+			directionX = (leftKey ? -1 : 0);
 			break;
 		case 40: //down
-			if (directionY == 1) {
-				directionY = 0;
-			}
+			downKey = false;
+			directionY = (upKey ? -1 : 0);
 			break;
 		}
 		player.setDirection(directionX, directionY);
