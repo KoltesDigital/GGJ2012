@@ -21,13 +21,13 @@ Player = function(id, character, team) {
 	this.sprite.runAction(this.animation);
 };
 
-Player.prototype.addToScene = function() {
+Player.prototype.addToLayer = function(layer) {
 	console.log(this);
-	playersLayer.appendChild(this.sprite);
+	layer.appendChild(this.sprite);
 };
 
-Player.prototype.removeFromScene = function() {
-	playersLayer.removeChild(this.sprite);
+Player.prototype.removeFromLayer = function(layer) {
+	layer.removeChild(this.sprite);
 };
 
 Player.prototype.setDirection = function(x, y) {

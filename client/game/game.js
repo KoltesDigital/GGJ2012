@@ -13,11 +13,17 @@ game.players = {};
 
 game.addPlayer = function(player) {
 	this.players[player.id] = player;
-	player.addToScene();
+	player.addToLayer(game.playersLayer);
 };
 
 game.removePlayer = function(id) {
-	this.players[id].removeFromScene();
+	var player = this.players[id];
+	if (player == this.player) {
+		delete this.player;
+		player.removeFromLayer(game.currentPlayerLayer);
+	} else {
+		player.removeFromLayer(game.playersLayer);
+	}
 	delete this.players[id];
 };
 
@@ -27,7 +33,10 @@ game.getCurrentPlayer = function(id) {
 
 game.setCurrentPlayer = function(id) {
 	this.player = this.players[id];
-	console.log('set', id, this.player);
+	if (this.player) {
+		this.player.removeFromLayer(game.playersLayer);
+		this.player.addToLayer(game.currentPlayerLayer);
+	}
 };
 
 game.start = function() {
@@ -35,9 +44,12 @@ game.start = function() {
 	scene = new lime.Scene();
 	
 	socket = new Socket(this, constants.server);
-	
-	playersLayer = new lime.Layer();
-	scene.appendChild(playersLayer);
+
+	this.playersLayer = new lime.Layer();
+	scene.appendChild(this.playersLayer);
+
+	this.currentPlayerLayer = new lime.Layer();
+	scene.appendChild(this.currentPlayerLayer);
 
 	var leftKey, rightKey, upKey, downKey;
 	var directionX = 0, directionY = 0;
@@ -82,7 +94,7 @@ game.start = function() {
 				xMove: directionX,
 				yMove: directionY
 			});
-		//player.setDirection(directionX, directionY);
+		player.setDirection(directionX, directionY);
 	});
 
 	goog.events.listen(window, ['keyup'], function(e) {
@@ -109,7 +121,7 @@ game.start = function() {
 			xMove: directionX,
 			yMove: directionY
 		});
-		//player.setDirection(directionX, directionY);
+		player.setDirection(directionX, directionY);
 	});
 
 	lime.scheduleManager.schedule(function(dt) {
@@ -138,7 +150,8 @@ game.start = function() {
 			
 			cameraX += (targetX - cameraX) * constants.cameraRatio * dt;
 			cameraY += (targetY - cameraY) * constants.cameraRatio * dt;
-			playersLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
+			game.playersLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
+			game.currentPlayerLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
 		}
 	});
 	

@@ -9,10 +9,10 @@ goog.require('lime.animation.KeyframeAnimation');
 goog.require('constants');
 
 var characterAnimations = {
-		idle: [0, 1],
-		fill: [2, 3],
-		attacking: [4, 5],
-		hit: [6, 7]
+	idle: [0, 1],
+	fill: [2, 3],
+	attacking: [4, 5],
+	hit: [6, 7]
 };
 
 var sheets = [

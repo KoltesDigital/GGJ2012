@@ -45,5 +45,6 @@ Socket = function(game, server) {
 };
 
 Socket.prototype.send = function(data) {
+	
 	return this.sock.send(JSON.stringify(data));
 };
