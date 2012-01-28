@@ -22,6 +22,7 @@ public class Server extends WebSocketServer {
 	private final Team brocoli = new Team(0, this);
 	private final Team carrote = new Team(1, this);
 	private final Map<WebSocket, Player> players = new ConcurrentHashMap<WebSocket, Player>();
+	private final Queue<Arrow> arrows = new ConcurrentLinkedQueue<Arrow>();
 	private long timestamp;
 	private final Turn turn = new Turn();
 	
@@ -56,7 +57,17 @@ public class Server extends WebSocketServer {
 		try {
 			JSONObject jo = new JSONObject(message);
 			String s = jo.getString("type");
-			if ("move".equals(s)) {
+			if ("ping".equals(s)) {
+				JSONObject jos = new JSONObject();
+				jos.put("type", "pong");
+				jos.put("data", jo.get("data"));
+				jos.put("ts", System.currentTimeMillis());
+				try {
+					conn.send(jos.toString());
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			} else if ("move".equals(s)) {
 				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove")));
 			} else if ("startHit".equals(s)) {
 				events.add(new StartHitEvent(players.get(conn)));
@@ -145,9 +156,10 @@ public class Server extends WebSocketServer {
 			this.processEvents();
 		} else {
 			this.timestamp = ts;
+			this.processArrows(delta);
+			this.processHits(delta);
 			this.processEvents();
 			this.processMoves(delta);
-			this.processHits(delta);
 		}
 	}
 	
@@ -165,6 +177,13 @@ public class Server extends WebSocketServer {
 		}
 	}
 	
+	private void processArrows(long delta) {
+		Iterator<Arrow> iter = arrows.iterator();
+		while (iter.hasNext()) {
+			if (iter.next().doAction(delta)) iter.remove();
+		}
+	}
+	
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}
@@ -174,6 +193,10 @@ public class Server extends WebSocketServer {
 		public void run() {
 			for (;;) processTurn();
 		}
+	}
+	
+	public void addArrow(Arrow a) {
+		this.arrows.add(a);
 	}
 
 }

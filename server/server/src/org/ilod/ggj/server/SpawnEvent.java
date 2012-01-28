@@ -1,5 +1,7 @@
 package org.ilod.ggj.server;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import net.tootallnate.websocket.WebSocket;
 
 import org.json.JSONException;
@@ -17,7 +19,17 @@ public class SpawnEvent implements Event {
 	}
 	
 	public boolean applyEvent() {
-		Player p = new Lancer(ws, team, id);
+		Player p;
+		switch (ThreadLocalRandom.current().nextInt(3)) {
+		case 0:
+			p = new Lancer(ws, team, id);
+			break;
+		case 1:
+			p = new Horseman(ws, team, id);
+			break;
+		default:
+			p = new Archer(ws, team, id);
+		}
 		team.getServer().addPlayer(ws, p);
 		return true;
 	}

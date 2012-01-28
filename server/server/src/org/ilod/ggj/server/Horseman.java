@@ -2,20 +2,20 @@ package org.ilod.ggj.server;
 
 import net.tootallnate.websocket.WebSocket;
 
-public class Lancer extends Player {
-	private static final int ALLONGE = 64;
+public class Horseman extends Player {
+	private static final int ALLONGE = 32;
 	private static final int HITBOX = 16;
 	private static final int HP = 300;
 	private static final int DOMMAGES = 200;
-	private static final int MOVE_SPEED = 30;
+	private static final int MOVE_SPEED = 45;
 	
-	public Lancer(WebSocket ws, Team team, int id) {
+	public Horseman(WebSocket ws, Team team, int id) {
 		super(ws, team, id, HP, MOVE_SPEED, HITBOX);
 	}
 	
 	@Override
 	public int getType() {
-		return 0;
+		return 1;
 	}
 	
 	@Override
