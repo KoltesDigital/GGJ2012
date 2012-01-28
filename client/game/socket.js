@@ -35,6 +35,13 @@ Socket = function(game, server) {
 			player.setDirection(obj.xMove, obj.yMove);
 			break;
 			
+		case "ping":
+			this.send({
+				type: "pong",
+				data: obj.data
+			});
+			break;
+			
 		case "spawn":
 			var player = new Player(obj.id, obj.work, obj.team);
 			player.setDirection(obj.x, obj.y);
@@ -45,6 +52,6 @@ Socket = function(game, server) {
 };
 
 Socket.prototype.send = function(data) {
-	
+	data.ts = Date.now();
 	return this.sock.send(JSON.stringify(data));
 };
