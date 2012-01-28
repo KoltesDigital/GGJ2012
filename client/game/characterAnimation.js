@@ -71,7 +71,7 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 	var dt = this.dt_,
 	delay_msec = Math.round(this.delay * 1000),
 	i = targets.length;
-
+	
 	if (this.updateScale_) {
 		delete this.updateScale_;
 
@@ -116,6 +116,6 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 		this.lastChangeTime_ -= delay_msec;
 		this.lastChangeTime_ %= delay_msec;
 	}
-
+	
 	return 0;
 };

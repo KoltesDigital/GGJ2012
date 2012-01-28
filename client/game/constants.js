@@ -2,10 +2,12 @@ goog.provide('constants');
 
 goog.exportSymbol('constants.cameraGap', 100);
 
-goog.exportSymbol('constants.cameraRatio', 0.01);
+goog.exportSymbol('constants.cameraRatio', 0.0008);
 
 goog.exportSymbol('constants.characters', {
-	lancer: 0
+	lancer: 0,
+	knight: 1,
+	archer: 2
 });
 
 goog.exportSymbol('constants.characterSpeed', 0.3);
@@ -21,11 +23,13 @@ goog.exportSymbol('constants.imagesPath', 'images/');
 
 goog.exportSymbol('constants.screenHeight', 768);
 
+goog.exportSymbol('constants.screenMargin', 100);
+
 goog.exportSymbol('constants.screenWidth', 1024);
 
 goog.exportSymbol('constants.server', 'ws://sd-24732.dedibox.fr:8133');
 
 goog.exportSymbol('constants.teams', {
-	broccoli: 0,
-	carrot: 1
+	broccolis: 0,
+	carrots: 1
 });

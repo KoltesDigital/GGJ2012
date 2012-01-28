@@ -1,13 +1,15 @@
 goog.provide('game');
 
 goog.require('lime.Director');
+goog.require('lime.GlossyButton');
+goog.require('lime.Layer');;
 goog.require('lime.Scene');
-goog.require('lime.Layer');
-goog.require('lime.fill.Image');
 goog.require('lime.Sprite');
+goog.require('lime.fill.Image')
 goog.require('constants');
 goog.require('Player');
 goog.require('Socket');
+goog.require('SocketMock');
 
 game.players = {};
 
@@ -39,31 +41,95 @@ game.setCurrentPlayer = function(id) {
 	}
 };
 
+game.changeCharacter = function() {
+		socket.send({
+		type: 'change',
+		character: this.newCharacter,
+		team: this.newTeam
+	});
+	scene.appendChild(this.playersLayer);
+	scene.appendChild(this.currentPlayerLayer);
+};
+
 game.start = function() {
 	director = new lime.Director(document.body, constants.screenWidth, constants.screenHeight);
 	scene = new lime.Scene();
+	//scene.setRenderer(lime.Renderer.CANVAS);
 	
-	socket = new Socket(this, constants.server);
-
 	this.playersLayer = new lime.Layer();
-	scene.appendChild(this.playersLayer);
+	//this.appendChild(this.playersLayer);
 
 	this.currentPlayerLayer = new lime.Layer();
-	scene.appendChild(this.currentPlayerLayer);
+	//this.appendChild(this.currentPlayerLayer);
+
+	this.teamSelectionLayer = new lime.Layer();
+	//scene.appendChild(this.teamSelectionLayer);
+
+	var btnBroccolis = new lime.GlossyButton('Broccolis').setSize(400, 600).setPosition(250, 450).setRenderer(lime.Renderer.CANVAS);
+	this.teamSelectionLayer.appendChild(btnBroccolis);
+	goog.events.listen(btnBroccolis, 'click', function() {
+		game.newTeam = constants.teams.broccolis;
+		scene.removeChild(game.teamSelectionLayer);
+		scene.appendChild(game.characterSelectionLayer);
+	});
+
+	var btnCarrots = new lime.GlossyButton('Carrots').setSize(400, 600).setPosition(774, 450).setRenderer(lime.Renderer.CANVAS);
+	this.teamSelectionLayer.appendChild(btnCarrots);
+	goog.events.listen(btnCarrots, 'click', function() {
+		game.newTeam = constants.teams.carrots;
+		scene.removeChild(game.teamSelectionLayer);
+		scene.appendChild(game.characterSelectionLayer);
+	});
+
+	this.characterSelectionLayer = new lime.Layer();
+
+	var btnLancer = new lime.GlossyButton('Lancer').setSize(300, 600).setPosition(200, 450).setRenderer(lime.Renderer.CANVAS);
+	this.characterSelectionLayer.appendChild(btnLancer);
+	goog.events.listen(btnLancer, 'click', function() {
+		game.newCharacter = constants.characters.lancer;
+		scene.removeChild(game.characterSelectionLayer);
+		game.changeCharacter();
+	});
+
+	var btnKnight = new lime.GlossyButton('Knight').setSize(300, 600).setPosition(512, 450).setRenderer(lime.Renderer.CANVAS);
+	this.characterSelectionLayer.appendChild(btnKnight);
+	goog.events.listen(btnKnight, 'click', function() {
+		game.newCharacter = constants.characters.knight;
+		scene.removeChild(game.characterSelectionLayer);
+		game.changeCharacter();
+	});
+
+	var btnArcher = new lime.GlossyButton('Archer').setSize(300, 600).setPosition(824, 450).setRenderer(lime.Renderer.CANVAS);
+	this.characterSelectionLayer.appendChild(btnArcher);
+	goog.events.listen(btnArcher, 'click', function() {
+		game.newCharacter = constants.characters.archer;
+		scene.removeChild(game.characterSelectionLayer);
+		game.changeCharacter();
+	});
 
 	var leftKey, rightKey, upKey, downKey;
-	var directionX = 0, directionY = 0;
+	var directionX = 0, directionY = 0, direction;
 	var cameraX = 0, cameraY = 0;
 
+	socket = new SocketMock(this, constants.server);
+
+	game.newCharacter = 0;
+	game.newTeam = 0;
+	game.changeCharacter();
+	
 	goog.events.listen(window, ['keydown'], function(e) {
 		//console.log(e.keyCode);
 		modif = false;
 		switch (e.keyCode) {
+		case 32: //space
+			game.player.startAttacking();
+			break;
 		case 37: //left
 			if (directionX != -1) {
 				leftKey = true;
 				modif = true;
 				directionX = -1;
+				direction = constants.directions.left;
 			}
 			break;
 		case 38: //up
@@ -71,6 +137,7 @@ game.start = function() {
 				upKey = true;
 				modif = true;
 				directionY = -1;
+				direction = constants.directions.up;
 			}
 			break;
 		case 39: //right
@@ -78,6 +145,7 @@ game.start = function() {
 				rightKey = true;
 				modif = true;
 				directionX = 1;
+				direction = constants.directions.right;
 			}
 			break;
 		case 40: //down
@@ -85,6 +153,7 @@ game.start = function() {
 				downKey = true;
 				modif = true;
 				directionY = 1;
+				direction = constants.directions.down;
 			}
 			break;
 		}
@@ -94,11 +163,14 @@ game.start = function() {
 				xMove: directionX,
 				yMove: directionY
 			});
-		player.setDirection(directionX, directionY);
+		game.player.setDirection(directionX, directionY, direction);
 	});
 
 	goog.events.listen(window, ['keyup'], function(e) {
 		switch (e.keyCode) {
+		case 32: //space
+			game.player.stopAttacking();
+			break;
 		case 37: //left
 			leftKey = false;
 			directionX = (rightKey ? 1 : 0);
@@ -121,7 +193,7 @@ game.start = function() {
 			xMove: directionX,
 			yMove: directionY
 		});
-		player.setDirection(directionX, directionY);
+		game.player.setDirection(directionX, directionY);
 	});
 
 	lime.scheduleManager.schedule(function(dt) {
