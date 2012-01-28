@@ -36,7 +36,10 @@ sock.onmessage = function(evt) {
 		players[obj.id].removeFromScene();
 		delete players[obj.id];
 		break;
-		
+	case "id":
+		console.log('id='+obj.id);
+		//faire un truc avec obj.id
+		break;
 	}
 };
 
