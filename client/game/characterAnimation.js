@@ -12,7 +12,8 @@ var characterAnimations = {
 	idle: [0, 1],
 	fill: [2, 3],
 	attacking: [4, 5],
-	hit: [6, 7]
+	hit: [6, 7],
+	death: [24, 25]
 };
 
 var sheets = [
@@ -31,16 +32,14 @@ var sheets = [
 CharacterAnimation = function(character, team) {
 	lime.animation.KeyframeAnimation.call(this);
 
-	this.direction_ = 0;
-
-	this.state_ = 'idle';
-
 	var sheet = sheets[character][team];
 	var ss = new lime.SpriteSheet(constants.imagesPath + sheet.filename, sheet.metadata, lime.parser.ZWOPTEX);
 
 	for(var i = 1; i <= 32; ++i) {
 		this.addFrame(ss.getFrame('frame_'+goog.string.padNumber(i, 4)+'.png'));
 	}
+	
+	this.spawn();
 };
 goog.inherits(CharacterAnimation, lime.animation.KeyframeAnimation);
 
@@ -67,6 +66,24 @@ CharacterAnimation.prototype.setWalking = function(walking) {
 	return this;
 };
 
+CharacterAnimation.prototype.hit = function() {
+	this.hit_ = true;
+	return this;
+};
+
+CharacterAnimation.prototype.dead = function() {
+	this.dead_ = true;
+	this.direction_ = 0;
+	this.currentFrame_ = -1;
+	return this;
+};
+
+CharacterAnimation.prototype.spawn = function() {
+	this.direction_ = 0;
+	this.state_ = 'idle';
+	return this;
+};
+
 CharacterAnimation.prototype.updateAll = function(t, targets) {
 	var dt = this.dt_,
 	delay_msec = Math.round(this.delay * 1000),
@@ -89,7 +106,12 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 	this.lastChangeTime_ += dt;
 	if (this.lastChangeTime_ > delay_msec) {
 		var animation;
-		if (this.state_ == 'attackingFill') {
+		if (this.dead_) {
+			animation = characterAnimations.death;
+		} else if (this.hit_) {
+			delete this.hit_;
+			animation = characterAnimations.hit;
+		} else if (this.state_ == 'attackingFill') {
 			animation = characterAnimations.fill;
 			this.state_ = 'attacking';
 		} else if (this.state_ == 'idleFill') {
@@ -100,6 +122,9 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 		}
 
 		var nextFrame = this.currentFrame_ + 1;
+		if (this.dead_ && nextFrame >= animation.length) {
+			return 1;
+		}
 		if (!this.walking_ || nextFrame >= animation.length) {
 			nextFrame = 0;
 		}

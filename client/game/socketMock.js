@@ -62,5 +62,9 @@ SocketMock.prototype.send = function(data) {
 			}, Math.random() * 100);
 		}, Math.random() * 100);
 		break;
+		
+	case "startAttack":
+		this.game.dead(1);
+		break;
 	}
 };

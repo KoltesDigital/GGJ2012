@@ -183,7 +183,7 @@ game.setCurrentPlayer = function(id) {
 };
 
 game.changeCharacter = function() {
-		socket.send({
+	socket.send({
 		type: 'change',
 		character: this.newCharacter,
 		team: this.newTeam
@@ -213,19 +213,17 @@ game.removeArrow = function(id) {
 };
 
 game.hit = function(id) {
-	
+	var player = this.players[id];
+	if (player) {
+		player.hit();
+	}
 };
 
-game.death = function(id) {
-	
-};
-
-game.hideCharacter = function(id) {
-	
-};
-
-game.showCharacter = function(id) {
-	
+game.dead = function(id) {
+	var player = this.players[id];
+	if (player) {
+		player.dead();
+	}
 };
 
 game.start = function() {

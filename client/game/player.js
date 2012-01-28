@@ -100,3 +100,13 @@ Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
 	this.targetX = x + this.directionX * step;
 	this.targetY = y + this.directionY * step;
 };
+
+Player.prototype.hit = function() {
+	this.animation.hit();
+};
+
+Player.prototype.dead = function() {
+	this.animation.dead();
+	this.directionX = 0;
+	this.directionY = 0;
+};
