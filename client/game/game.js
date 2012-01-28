@@ -130,14 +130,18 @@ game.start = function() {
 		player.update(dt);
 
 		var targetX = player.x;
-		if (player.direction == constants.directions.left) {
+		if (directionX != 0) {
+			targetX += directionX * constants.cameraGap;
+		} else if (player.direction == constants.directions.left) {
 			targetX -= constants.cameraGap;
 		} else if (player.direction == constants.directions.right) {
 			targetX += constants.cameraGap;
 		}
 
 		var targetY = player.y;
-		if (player.direction == constants.directions.up) {
+		if (directionY != 0) {
+			targetY += directionY * constants.cameraGap;
+		} else if (player.direction == constants.directions.up) {
 			targetY -= constants.cameraGap;
 		} else if (player.direction == constants.directions.down) {
 			targetY += constants.cameraGap;
