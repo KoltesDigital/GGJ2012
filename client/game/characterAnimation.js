@@ -44,7 +44,7 @@ CharacterAnimation = function(character, team) {
 goog.inherits(CharacterAnimation, lime.animation.KeyframeAnimation);
 
 CharacterAnimation.prototype.setDirection = function(direction) {
-	if (this.direction_ > 2 && direction < 2 || this.direction_ < 2 && direction > 2) {
+	if (this.direction_ > 2 && direction <= 2 || this.direction_ <= 2 && direction > 2) {
 		this.updateScale_ = true;
 	}
 	this.direction_ = direction;
