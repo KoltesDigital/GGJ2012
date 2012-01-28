@@ -8,9 +8,39 @@ goog.require('lime.Sprite');
 goog.require('CharacterAnimation');
 goog.require('constants');
 
-Player = function(x, y, character, team) {
+var players = new Object();
+
+var sock = new WebSocket('ws://sd-24732.dedibox.fr:8133');
+sock.onopen = function(evt) {
+
+};
+sock.onclose = function(evt) {
+
+};
+sock.onerror = function(evt) {
+
+};
+sock.onmessage = function(evt) {
+	obj = eval('('+evt.data+')');
+	switch (obj.type) {
+	case "spawn":
+		new Player(obj.id, obj.x, obj.y, obj.work, obj.team);
+		break;
+	case "move":
+		players['id'+obj.id].setPosition(obj.x, obj.y);
+		players['id'+obj.id].setDirection(obj.xMove, obj.yMove);
+		break;
+	case "dead":
+		players['id'+obj.id].removeFromGame();
+		break;
+		
+	}
+};
+
+Player = function(id, x, y, character, team) {
 	this.x = x;
 	this.y = y;
+	this.id = id;
 	this.character = character;
 	this.team = team;
 
@@ -22,15 +52,24 @@ Player = function(x, y, character, team) {
 	this.sprite = new lime.Sprite().setPosition(x, y);
 	this.animation = new CharacterAnimation(character, team).setDirection(constants.directions.right);
 	this.sprite.runAction(this.animation);
+	
+	players['id'+this.id] = this;
+	this.addToScene(); // A enlever
 };
 
 Player.prototype.addToScene = function() {
+	console.log(this);
 	playersLayer.appendChild(this.sprite);
 };
 
 Player.prototype.removeFromScene = function() {
 	playersLayer.removeChild(this.sprite);
 };
+
+Player.prototype.removeFromGame = function() {
+	this.removeFromScene();
+	delete players['id'+this.id];
+}
 
 Player.prototype.setDirection = function(x, y) {
 	this.walking = (x != 0 || y != 0);
@@ -50,15 +89,20 @@ Player.prototype.setDirection = function(x, y) {
 		} else {
 			direction = constants.directions.up;
 		}
-		
 		this.animation.setDirection(direction);
 	}
 };
 
+Player.prototype.setPosition = function(x, y) {
+	this.x = x;
+	this.y = y;
+	this.sprite.setPosition(x, y);
+}
+
 Player.prototype.update = function(dt) {
 	if (this.walking) {
-		this.x += this.directionX * dt;
-		this.y += this.directionY * dt;
+		this.x += this.directionX * dt * 3 / 10;
+		this.y += this.directionY * dt * 3 / 10;
 		this.sprite.setPosition(this.x, this.y);
 	}
 };
@@ -70,28 +114,43 @@ game.start = function() {
 	playersLayer = new lime.Layer();
 	scene.appendChild(playersLayer);
 
-	var player = new Player(256, 256, constants.characters.lancer, constants.teams.carrot);
-	player.addToScene();
+	//var player = new Player(0, 256, 256, constants.characters.lancer, constants.teams.carrot);
+	//player.addToScene();
 
 	var directionX = 0, directionY = 0;
 
 	goog.events.listen(document, ['keydown'], function(e) {
 		//console.log(e.keyCode);
+		modif = false;
 		switch (e.keyCode) {
 		case 37: //left
-			directionX = -1;
+			if (directionX != -1) {
+				modif = true;
+				directionX = -1;
+			}
 			break;
 		case 38: //up
-			directionY = -1;
+			if (directionY != -1) {
+				modif = true;
+				directionY = -1;
+			}
 			break;
 		case 39: //right
-			directionX = 1;
+			if (directionX != 1) {
+				modif = true;
+				directionX = 1;
+			}
 			break;
 		case 40: //down
-			directionY = 1;
+			if (directionY != 1) {
+				modif = true;
+				directionY = 1;
+			}
 			break;
 		}
-		player.setDirection(directionX, directionY);
+		if (modif)
+			sock.send(JSON.stringify({"type": "move", "xMove": directionX, "yMove": directionY}));
+		//player.setDirection(directionX, directionY);
 	});
 
 	goog.events.listen(document, ['keyup'], function(e) {
@@ -107,7 +166,7 @@ game.start = function() {
 			}
 			break;
 		case 39: //right
-			if (directionX == 1 && directionY == 0) {
+			if (directionX == 1) {
 				directionX = 0;
 			}
 			break;
@@ -117,11 +176,16 @@ game.start = function() {
 			}
 			break;
 		}
-		player.setDirection(directionX, directionY);
+		sock.send(JSON.stringify({"type": "move", "xMove": directionX, "yMove": directionY}));
+		//player.setDirection(directionX, directionY);
 	});
 
 	lime.scheduleManager.schedule(function(dt) {
-		player.update(dt);
+		for (key in players) {
+			child = players[key];
+			child.update(dt);
+		}
+		//player.update(dt);
 	});
 	
 	/*
