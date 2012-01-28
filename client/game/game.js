@@ -174,7 +174,7 @@ game.setCurrentPlayer = function(id) {
 		
 		this.ping = function() {
 			socket.send({
-				type: "move",
+				type: "ping",
 				data: Date.now()
 			});
 		};

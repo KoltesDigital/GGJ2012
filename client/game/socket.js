@@ -22,24 +22,28 @@ Socket = function(game, server) {
 		obj = eval('('+evt.data+')');
 		switch (obj.type) {
 		case "dead":
-			game.removePlayer(obj.id);
+			game.getPlayer(obj.id).dead();
 			break;
-			
 		case "id":
 			game.setCurrentPlayer(obj.id);
 			break;
-			
+		case "arrow":
+			game.addArrow(obj.id, obj.x, obj.y, obj.xMove * obj.speed, obj.yMove * obj.speed);
+			break;
+		case "arrowHit":
+			if (obj.hit) {
+				game.getPlayer(obj.victim).hit();
+			}
+			game.removeArrow(obj.id);
+			break;
 		case "move":
 			var player = game.getPlayer(obj.id);
 			player.setPosition(obj.x, obj.y);
 			player.setDirection(obj.xMove, obj.yMove);
 			break;
 			
-		case "ping":
-			this.send({
-				type: "pong",
-				data: obj.data
-			});
+		case "pong":
+			game.pong(evt);
 			break;
 			
 		case "spawn":
