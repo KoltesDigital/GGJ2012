@@ -6,13 +6,11 @@ goog.require('Player');
 SocketMock = function(game, server) {
 	this.game = game;
 	
-	for (var i = 0; i < 5; ++i) {
+	for (var i = 1; i < 5; ++i) {
 		var player = new Player(i, 0, 1);
-		player.setDirection((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+		player.setPosition((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
 		game.addPlayer(player);
 	}
-	
-	game.setCurrentPlayer(0);
 	
 	var frame = 0;
 
@@ -28,6 +26,10 @@ SocketMock.prototype.send = function(data) {
 	data.ts = Date.now();
 	
 	switch (data.type) {
-		
+	case "change":
+		var player = new Player(0, 0, 1);
+		player.setPosition((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+		game.addPlayer(player);
+		game.setCurrentPlayer(0);
 	}
 };

@@ -2,7 +2,7 @@ goog.provide('constants');
 
 goog.exportSymbol('constants.cameraGap', 100);
 
-goog.exportSymbol('constants.cameraRatio', 0.0008);
+goog.exportSymbol('constants.cameraRatio', 0.008);
 
 goog.exportSymbol('constants.characters', {
 	lancer: 0,
