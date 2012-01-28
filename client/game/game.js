@@ -51,7 +51,7 @@ game.setCurrentPlayer = function(id) {
 				game.player.startAttacking();
 				socket.send({
 					type: "startAttack",
-					direction: direction
+					direction: game.player.direction
 				});
 				break;
 			case 37: //left
@@ -87,13 +87,15 @@ game.setCurrentPlayer = function(id) {
 				}
 				break;
 			}
-			if (modif)
+			if (modif) {
+				game.player.setDirection(directionX, directionY, direction);
 				socket.send({
 					type: "move",
 					xMove: directionX,
-					yMove: directionY
+					yMove: directionY,
+					direction: direction
 				});
-			game.player.setDirection(directionX, directionY, direction);
+			}
 		});
 
 		goog.events.listen(window, ['keyup'], function(e) {
@@ -121,12 +123,13 @@ game.setCurrentPlayer = function(id) {
 				directionY = (upKey ? -1 : 0);
 				break;
 			}
+			game.player.setDirection(directionX, directionY);
 			socket.send({
 				type: "move",
 				xMove: directionX,
-				yMove: directionY
+				yMove: directionY,
+				direction: game.player.direction
 			});
-			game.player.setDirection(directionX, directionY);
 		});
 
 		lime.scheduleManager.schedule(function(dt) {
