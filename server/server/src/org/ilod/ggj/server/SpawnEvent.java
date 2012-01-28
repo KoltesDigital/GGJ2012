@@ -17,7 +17,7 @@ public class SpawnEvent implements Event {
 	}
 	
 	public boolean applyEvent() {
-		Player p = new Fantassin(ws, team, id);
+		Player p = new Lancer(ws, team, id);
 		team.getServer().addPlayer(ws, p);
 		return true;
 	}

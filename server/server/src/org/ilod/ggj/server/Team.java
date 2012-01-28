@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Team {
 	private final AtomicInteger nClients = new AtomicInteger();
-	private final String id;
+	private final int id;
 	private final Server server;
 	
-	public Team(String id, Server server) {
+	public Team(int id, Server server) {
 		this.id = id;
 		this.server = server;
 	}
@@ -30,7 +30,7 @@ public class Team {
 		nClients.decrementAndGet();
 	}
 	
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 }

@@ -6,14 +6,13 @@ import net.tootallnate.websocket.WebSocket;
 
 public abstract class Player {
 	private static final int X_MIN = -2500;
-	private static final int X_MAX =  2500;
+	private static final int X_MAX =  2499;
 	private static final int Y_MIN = -2500;
-	private static final int Y_MAX =  2500;
-	private int x = 0;
-	private int y = 0;
+	private static final int Y_MAX =  2499;
+	private int x = 256;
+	private int y = 256;
 	private final int id;
 	private final Team team;
-	private String direction;
 	private int xMove;
 	private int yMove;
 	private boolean dead = false;
@@ -44,7 +43,7 @@ public abstract class Player {
 		return (x-p.x)*(x-p.x) + (y-p.y)*(y-p.y);
 	}
 	
-	public abstract String getType();
+	public abstract int getType();
 	public abstract void hit(long delta);
 	public abstract int getHitbox();
 	
@@ -52,26 +51,9 @@ public abstract class Player {
 		return team;
 	}
 	
-	public void setDirection(String direction) {
-		if (!direction.equals(this.direction)) {
-			this.direction = direction;
-			if ("haut".equals(direction)) {
-				xMove = 0;
-				yMove = -1;
-			} else if ("bas".equals(direction)) {
-				xMove = 0;
-				yMove = 1;
-			} else if ("gauche".equals(direction)) {
-				xMove = -1;
-				yMove = 0;
-			} else if ("droite".equals(direction)) {
-				xMove = 1;
-				yMove = 0;
-			} else {
-				xMove = 0;
-				yMove = 0;
-			}
-		}
+	public void setDirection(int xMove, int yMove) {
+		this.xMove = xMove;
+		this.yMove = yMove;
 	}
 	
 	public void kill() {
@@ -93,8 +75,8 @@ public abstract class Player {
 	}
 	
 	public void move(long delta) {
-		x += xMove * delta * 3 / 100;
-		y += yMove * delta * 3 / 100;
+		x += xMove * delta * 3 / 10;
+		y += yMove * delta * 3 / 10;
 		if (x > X_MAX) x = X_MAX;
 		else if (x < X_MIN) x = X_MIN;
 		if (y > Y_MAX) y = Y_MAX;

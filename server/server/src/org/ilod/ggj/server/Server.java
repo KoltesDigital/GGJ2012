@@ -18,8 +18,8 @@ import net.tootallnate.websocket.WebSocketServer;
 public class Server extends WebSocketServer {
 	private int id = 0;
 	private final Queue<Event> events = new ConcurrentLinkedQueue<Event>();
-	private final Team brocoli = new Team("brocoli", this);
-	private final Team carrote = new Team("carrote", this);
+	private final Team brocoli = new Team(0, this);
+	private final Team carrote = new Team(1, this);
 	private final Map<WebSocket, Player> players = new ConcurrentHashMap<WebSocket, Player>();
 	private long timestamp;
 	private final Turn turn = new Turn();
@@ -56,7 +56,7 @@ public class Server extends WebSocketServer {
 			JSONObject jo = new JSONObject(message);
 			String s = jo.getString("type");
 			if ("move".equals(s)) {
-				events.add(new MoveEvent(players.get(conn), jo.getString("direction")));
+				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove")));
 			} else if ("startHit".equals(s)) {
 				events.add(new StartHitEvent(players.get(conn)));
 			} else if ("stoptHit".equals(s)) {
@@ -86,7 +86,7 @@ public class Server extends WebSocketServer {
 			jo.put("team", p.getTeam().getId());
 			jo.put("x", p.getX());
 			jo.put("y", p.getY());
-			jo.put("class", p.getType());
+			jo.put("work", p.getType());
 			this.sendToAll(jo.toString());
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
@@ -118,10 +118,14 @@ public class Server extends WebSocketServer {
 	private void processTurn() {
 		long ts = System.currentTimeMillis();
 		long delta = ts - timestamp;
-		this.timestamp = ts;
-		this.processEvents();
-		this.processMoves(delta);
-		this.processHits(delta);
+		if (delta < 34) {
+			this.processEvents();
+		} else {
+			this.timestamp = ts;
+			this.processEvents();
+			this.processMoves(delta);
+			this.processHits(delta);
+		}
 	}
 	
 	private void processMoves(long delta) {

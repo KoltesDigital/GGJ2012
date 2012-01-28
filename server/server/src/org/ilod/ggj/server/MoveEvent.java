@@ -5,20 +5,24 @@ import org.json.JSONObject;
 
 public class MoveEvent implements Event {
 	private final Player p;
-	private final String direction;
+	private final int xMove;
+	private final int yMove;
 	
-	public MoveEvent(Player p, String direction) {
+	public MoveEvent(Player p, int xMove, int yMove) {
 		this.p = p;
-		this.direction = direction;
+		this.xMove = xMove;
+		this.yMove = yMove;
 	}
 
 	@Override
 	public boolean applyEvent() {
-		p.setDirection(direction);
+		p.setDirection(xMove, yMove);
 		try {
 			JSONObject jo = new JSONObject();
 			jo.put("type", "move");
-			jo.put("direction", direction);
+			jo.put("id", p.getId());
+			jo.put("xMove", xMove);
+			jo.put("yMove", yMove);
 			jo.put("x", p.getX());
 			jo.put("y", p.getY());
 			jo.put("timestamp", p.getTeam().getServer().getTimestamp());
