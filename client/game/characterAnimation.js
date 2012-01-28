@@ -1,17 +1,18 @@
 goog.provide('CharacterAnimation');
 
 goog.require('goog.events');
-goog.require('lime.ASSETS.fantassin_c.zwoptex');;
+goog.require('lime.ASSETS.fantassin_b.zwoptex');
+goog.require('lime.ASSETS.fantassin_c.zwoptex');
 goog.require('lime.parser.ZWOPTEX');
 goog.require('lime.SpriteSheet');
 goog.require('lime.animation.KeyframeAnimation');
 goog.require('constants');
 
 var characterAnimations = {
-		idle: [0, 1],
-		fill: [2, 3],
-		attacking: [4, 5],
-		hit: [6, 7]
+	idle: [0, 1],
+	fill: [2, 3],
+	attacking: [4, 5],
+	hit: [6, 7]
 };
 
 var sheets = [
