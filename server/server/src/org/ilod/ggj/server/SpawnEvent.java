@@ -11,6 +11,7 @@ public class SpawnEvent implements Event {
 	private final WebSocket ws;
 	private final int id;
 	private final Team team;
+	private final long ts = System.currentTimeMillis() + 3000;
 	
 	public SpawnEvent(WebSocket ws, Team team, int id) {
 		this.ws = ws;
@@ -19,6 +20,7 @@ public class SpawnEvent implements Event {
 	}
 	
 	public boolean applyEvent() {
+		if (System.currentTimeMillis() < ts) return false;
 		Player p;
 		switch (ThreadLocalRandom.current().nextInt(3)) {
 		case 0:

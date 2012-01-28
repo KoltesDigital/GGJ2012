@@ -24,11 +24,13 @@ public class Horseman extends Player {
 	
 	@Override
 	public void hit(long delta) {
+		final int yHit = (hitDirection == 0 ? -1 : hitDirection == 2 ? 1 : 0);
+		final int xHit = (hitDirection == 3 ? -1 : hitDirection == 1 ? 1 : 0);
 		for (Player p : this.getTeam().getServer().getPlayers()) {
 			int d = ALLONGE + p.getHitbox();
 			if (this.getSquareDistance(p) < d*d) {
-				int bc = y - p.y;
-				int ab = x - p.x;
+				double bc = y - p.y;
+				double ab = x - p.x;
 				boolean ok = false;
 				if (ab == 0) {
 					ok = ((bc == 0) || (bc * yHit > 0));

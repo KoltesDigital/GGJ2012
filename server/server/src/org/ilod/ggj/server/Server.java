@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,7 @@ public class Server extends WebSocketServer {
 	private final Queue<Arrow> arrows = new ConcurrentLinkedQueue<Arrow>();
 	private long timestamp;
 	private final Turn turn = new Turn();
+	private final Tile[][] tiles = new Tile[20][20];
 	
 	public static void main(String[] args) {
 		new Server().start();
@@ -32,6 +34,11 @@ public class Server extends WebSocketServer {
 	
 	private Server() {
 		super(new InetSocketAddress(8133));
+		for (int i = 0 ; i < 20 ; i++) {
+			for (int j = 0 ; j < 20 ; j++) {
+				tiles[i][j] = new Tile(i * 250 - 2500, j * 250 - 2500, 250, 250);
+			}
+		}
 		new Thread(turn).start();
 	}
 	
@@ -68,9 +75,9 @@ public class Server extends WebSocketServer {
 					throw new RuntimeException(e);
 				}
 			} else if ("move".equals(s)) {
-				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove")));
+				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove"), jo.getInt("direction")));
 			} else if ("startHit".equals(s)) {
-				events.add(new StartHitEvent(players.get(conn)));
+				events.add(new StartHitEvent(players.get(conn), jo.getInt("direction")));
 			} else if ("stoptHit".equals(s)) {
 				events.add(new StopHitEvent(players.get(conn)));
 			}
@@ -197,6 +204,14 @@ public class Server extends WebSocketServer {
 	
 	public void addArrow(Arrow a) {
 		this.arrows.add(a);
+	}
+	
+	public Tile getTileAtPos(int x, int y) {
+		return tiles[(x + 2500) / 250][(y + 2500) / 250];
+	}
+	
+	public Tile getTile(int i, int j) {
+		return tiles[i][j];
 	}
 
 }

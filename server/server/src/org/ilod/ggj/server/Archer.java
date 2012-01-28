@@ -25,7 +25,7 @@ public class Archer extends Player {
 	
 	@Override
 	public void arrow(int power) {
-		this.getTeam().getServer().addArrow(new Arrow(this.getTeam(), this.x, this.y, this.xHit, this.yHit, ARROW_SPEED, DOMMAGES, ALLONGE));
+		this.getTeam().getServer().addArrow(new Arrow(this.getTeam(), this.x, this.y, this.xMove, this.yMove, ARROW_SPEED, DOMMAGES, ALLONGE));
 	}
 
 }
