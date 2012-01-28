@@ -24,6 +24,10 @@ SocketMock = function(game, server) {
 		var dy = y - player.y;
 		player.predicatePosition(Date.now() - deltaTime + (Math.random() - 0.5) * 100, x, y, dx, dy);
 	}, 2000);
+	
+	setTimeout(function() {
+		game.addArrow(1, 0, 0, 0, 1);
+	}, 1000);
 	/*
 	var frame = 0;
 

@@ -5,8 +5,9 @@ goog.require('lime.GlossyButton');
 goog.require('lime.Layer');;
 goog.require('lime.Scene');
 goog.require('lime.Sprite');
-goog.require('lime.fill.Image')
+goog.require('lime.fill.Image');
 goog.require('constants');
+goog.require('Arrow');
 goog.require('Player');
 goog.require('Socket');
 goog.require('SocketMock');
@@ -140,6 +141,10 @@ game.setCurrentPlayer = function(id) {
 			for (key in game.players) {
 				game.players[key].update(dt);
 			}
+
+			for (key in game.arrows) {
+				game.arrows[key].update(dt);
+			}
 			
 			if (game.player) {
 				var targetX = game.player.x;
@@ -185,6 +190,7 @@ game.changeCharacter = function() {
 	});
 	scene.appendChild(this.playersLayer);
 	scene.appendChild(this.currentPlayerLayer);
+	scene.appendChild(this.arrowLayer);
 };
 
 game.pong = function(obj) {
@@ -192,12 +198,18 @@ game.pong = function(obj) {
 	setTimeout(this.ping, constants.pingInterval);
 };
 
-game.addArrow = function(id, x, y, vx, vy) {
-	
+game.addArrow = function(id, x, y, sx, sy) {
+	var arrow = new Arrow(id, x, y, sx, sy);
+	this.arrows[id] = arrow;
+	arrow.addToLayer(this.arrowLayer);
 };
 
 game.removeArrow = function(id) {
-	
+	var arrow = this.arrows[id];
+	if (arrow) {
+		arrow.removeFromLayer(this.arrowLayer);
+		delete this.arrows[id];
+	}
 };
 
 game.hit = function(id) {
@@ -221,28 +233,15 @@ game.start = function() {
 	scene = new lime.Scene();
 	
 	this.playersLayer = new lime.Layer();
-	//this.appendChild(this.playersLayer);
-
 	this.currentPlayerLayer = new lime.Layer();
-	//this.appendChild(this.currentPlayerLayer);
-
+	this.arrowLayer = new lime.Layer();
+	
 	socket = new SocketMock(this, constants.server);
 
 	game.newCharacter = 0;
 	game.newTeam = 0;
 	game.changeCharacter();
 	
-	/*
-	player.setPosition(x, y);
-	player.setSpeed(x, y);
-	player.updatePosition(time);
-
-	player.move(x, y);
-
-	player.startAttack();
-	player.stopAttack();
-	player.hit();
-	 */
 	director.replaceScene(scene);
 };
 
