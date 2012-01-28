@@ -10,7 +10,7 @@ goog.require('constants');
 
 var players = new Object();
 
-var sock = new WebSocket('ws://sd-24732.dedibox.fr:8133');
+var sock = new WebSocket(constants.server);
 sock.onopen = function(evt) {
 
 };
@@ -24,38 +24,38 @@ sock.onmessage = function(evt) {
 	obj = eval('('+evt.data+')');
 	switch (obj.type) {
 	case "spawn":
-		new Player(obj.id, obj.x, obj.y, obj.work, obj.team);
+		var player = new Player(obj.id, obj.work, obj.team).setDirection(obj.x, obj.y);
+		players[obj.id] = player;
+		player.addToScene();
 		break;
 	case "move":
-		players['id'+obj.id].setPosition(obj.x, obj.y);
-		players['id'+obj.id].setDirection(obj.xMove, obj.yMove);
+		players[obj.id].setPosition(obj.x, obj.y);
+		players[obj.id].setDirection(obj.xMove, obj.yMove);
 		break;
 	case "dead":
-		players['id'+obj.id].removeFromGame();
+		players[obj.id].removeFromScene();
+		delete players[obj.id];
 		break;
 		
 	}
 };
 
-Player = function(id, x, y, character, team) {
-	this.x = x;
-	this.y = y;
+Player = function(id, character, team) {
 	this.id = id;
 	this.character = character;
 	this.team = team;
 
+	this.x = 0;
+	this.y = 0;
 	this.walking = false;
 	this.attacking = false;
 	this.direction = constants.directions.right;
 	this.directionX = 1;
 	this.directionY = 0;
 
-	this.sprite = new lime.Sprite().setPosition(x, y);
+	this.sprite = new lime.Sprite();
 	this.animation = new CharacterAnimation(character, team).setDirection(this.direction);
 	this.sprite.runAction(this.animation);
-	
-	players['id'+this.id] = this;
-	this.addToScene(); // A enlever
 };
 
 Player.prototype.addToScene = function() {
@@ -66,11 +66,6 @@ Player.prototype.addToScene = function() {
 Player.prototype.removeFromScene = function() {
 	playersLayer.removeChild(this.sprite);
 };
-
-Player.prototype.removeFromGame = function() {
-	this.removeFromScene();
-	delete players['id'+this.id];
-}
 
 Player.prototype.setDirection = function(x, y) {
 	this.walking = (x != 0 || y != 0);
@@ -101,7 +96,7 @@ Player.prototype.setPosition = function(x, y) {
 	this.x = x;
 	this.y = y;
 	this.sprite.setPosition(x, y);
-}
+};
 
 Player.prototype.update = function(dt) {
 	if (this.walking) {

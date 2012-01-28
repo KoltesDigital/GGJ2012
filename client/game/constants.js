@@ -23,6 +23,8 @@ goog.exportSymbol('constants.screenHeight', 768);
 
 goog.exportSymbol('constants.screenWidth', 1024);
 
+goog.exportSymbol('constants.server', 'ws://sd-24732.dedibox.fr:8133');
+
 goog.exportSymbol('constants.teams', {
 	broccoli: 0,
 	carrot: 1
