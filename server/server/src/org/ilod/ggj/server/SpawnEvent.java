@@ -1,33 +1,24 @@
 package org.ilod.ggj.server;
 
+import net.tootallnate.websocket.WebSocket;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SpawnEvent implements Event {
-	private final Client c;
+	private final WebSocket ws;
+	private final int id;
+	private final Team team;
 	
-	public SpawnEvent(Client c) {
-		this.c = c;
-	}
-	
-	public Client getClient() {
-		return c;
+	public SpawnEvent(WebSocket ws, Team team, int id) {
+		this.ws = ws;
+		this.id = id;
+		this.team = team;
 	}
 	
 	public boolean applyEvent() {
-		Player p = c.getTeam().createPlayer(c);
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("type", "spawn");
-			jo.put("id", p.getId());
-			jo.put("team", c.getTeam().getId());
-			jo.put("x", p.getX());
-			jo.put("y", p.getY());
-			jo.put("class", p.getType());
-			c.getGame().sendToAll(jo.toString());
-			return true;
-		} catch (JSONException e) {
-			throw new RuntimeException(e);
-		}
+		Player p = new Fantassin(ws, team, id);
+		team.getServer().addPlayer(ws, p);
+		return true;
 	}
 }

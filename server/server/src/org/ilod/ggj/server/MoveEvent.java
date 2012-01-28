@@ -21,8 +21,12 @@ public class MoveEvent implements Event {
 			jo.put("direction", direction);
 			jo.put("x", p.getX());
 			jo.put("y", p.getY());
-			jo.put("timestamp", p.getTeam().getGame().getTimestamp());
-			p.getTeam().getGame().sendToAll(jo.toString());
+			jo.put("timestamp", p.getTeam().getServer().getTimestamp());
+			try {
+				p.getTeam().getServer().sendToAll(jo.toString());
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 			return true;
 		} catch (JSONException e) {
 			throw new RuntimeException(e);

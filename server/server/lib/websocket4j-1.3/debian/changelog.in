@@ -1,4 +1,0 @@
-@PACKAGE_TARNAME@ (@PACKAGE_VERSION@-1) unstable; urgency=low
-  * @PACKAGE_NAME@ release.
-
- -- @PACKAGE_MAINTAINER@  @CONFIGURE_TIME@

@@ -1,33 +1,15 @@
 package org.ilod.ggj.server;
 
-public class Fantassin implements Player {
-	private float x = 0;
-	private float y = 0;
-	private final int id;
-	private final Team team;
-	private String direction;
-	private int xMove;
-	private int yMove;
-	private boolean dead = false;
+import net.tootallnate.websocket.WebSocket;
+
+public class Fantassin extends Player {
+	private static final int ALLONGE = 32;
+	private static final int HITBOX = 16;
+	private static final int HP = 100;
+	private static final int DOMMAGES = 40;
 	
-	public Fantassin(int id, Team team) {
-		this.id = id;
-		this.team = team;
-	}
-	
-	@Override
-	public int getId() {
-		return id;
-	}
-	
-	@Override
-	public float getX() {
-		return x;
-	}
-	
-	@Override
-	public float getY() {
-		return y;
+	public Fantassin(WebSocket ws, Team team, int id) {
+		super(ws, team, id, HP);
 	}
 	
 	@Override
@@ -36,46 +18,21 @@ public class Fantassin implements Player {
 	}
 	
 	@Override
-	public Team getTeam() {
-		return team;
-	}
-	
-	public void setDirection(String direction) {
-		if (!direction.equals(this.direction)) {
-			this.direction = direction;
-			switch (direction) {
-			case "haut":
-				xMove = 0;
-				yMove = -1;
-				break;
-			case "bas":
-				xMove = 0;
-				yMove = 1;
-				break;
-			case "gauche":
-				xMove = -1;
-				yMove = 0;
-				break;
-			case "droite":
-				xMove = 1;
-				yMove = 0;
-				break;
-			default:
-				xMove = 0;
-				yMove = 0;
-				break;
+	public void hit(long delta) {
+		for (Player p : this.getTeam().getServer().getPlayers()) {
+			int d = ALLONGE + p.getHitbox();
+			if (this.getSquareDistance(p) < d*d) {
+				int dom = (int)(DOMMAGES * delta / 1000);
+				int hp = p.hp.addAndGet(dom);
+				if (hp <= 0 && dom+hp > 0) {
+					p.kill();
+				}
 			}
 		}
 	}
 	
-	public void kill() {
-		if (dead) return;
-		dead = true;
-		this.getTeam().getGame().addEvent(new KillEvent(this));
-	}
-	
-	public void move(long delta) {
-		x += xMove * delta * .03;
-		y += yMove * delta * .03;
+	@Override
+	public int getHitbox() {
+		return HITBOX;
 	}
 }

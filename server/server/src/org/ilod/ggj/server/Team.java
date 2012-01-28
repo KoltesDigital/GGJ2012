@@ -5,24 +5,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Team {
-	private final Map<Player, Player> players = new ConcurrentHashMap<>();
 	private final AtomicInteger nClients = new AtomicInteger();
 	private final String id;
-	private final Game game;
+	private final Server server;
 	
-	public Team(String id, Game game) {
+	public Team(String id, Server server) {
 		this.id = id;
-		this.game = game;
+		this.server = server;
 	}
 	
-	public void processMoves(long delta) {
-		for (Player p : players.values()) {
-			p.move(delta);
-		}
-	}
-	
-	public Game getGame() {
-		return game;
+	public Server getServer() {
+		return server;
 	}
 	
 	public int getSize() {
@@ -35,16 +28,6 @@ public class Team {
 	
 	public void removeClient() {
 		nClients.decrementAndGet();
-	}
-	
-	public Player createPlayer(Client c) {
-		Player p = new Fantassin(c.getId(), this);
-		players.put(p, p);
-		return p;
-	}
-	
-	public void removePlayer(Player p) {
-		players.remove(p);
 	}
 	
 	public String getId() {
