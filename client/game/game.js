@@ -16,7 +16,7 @@ Player = function(x, y, character, team) {
 
 	this.walking = false;
 	this.attacking = false;
-	this.directionX = 1
+	this.directionX = 1;
 	this.directionY = 0;
 
 	this.sprite = new lime.Sprite().setPosition(x, y);
@@ -80,7 +80,7 @@ game.start = function() {
 	var leftKey, rightKey, upKey, downKey;
 	var directionX = 0, directionY = 0;
 
-	goog.events.listen(document, ['keydown'], function(e) {
+	goog.events.listen(window, ['keydown'], function(e) {
 		//console.log(e.keyCode);
 		switch (e.keyCode) {
 		case 37: //left
@@ -103,7 +103,7 @@ game.start = function() {
 		player.setDirection(directionX, directionY);
 	});
 
-	goog.events.listen(document, ['keyup'], function(e) {
+	goog.events.listen(window, ['keyup'], function(e) {
 		switch (e.keyCode) {
 		case 37: //left
 			leftKey = false;
