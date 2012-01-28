@@ -33,7 +33,10 @@ sock.onmessage = function(evt) {
 	case "dead":
 		players['id'+obj.id].removeFromGame();
 		break;
-		
+	case "id":
+		console.log('id='+obj.id);
+		//faire un truc avec obj.id
+		break;
 	}
 };
 
