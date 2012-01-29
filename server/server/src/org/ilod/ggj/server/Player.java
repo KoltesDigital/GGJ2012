@@ -13,8 +13,8 @@ public abstract class Player {
 	private static final int Y_MIN = -2480;
 	private static final int Y_MAX =  2480;
 	private final int hitbox;
-	protected double x = /*(int)(Math.random() * 5000 - 2500)*/ 256;
-	protected double y = /*(int)(Math.random() * 5000 - 2500)*/ 256;
+	protected double x = (int)(Math.random() * 4960 - 2480);
+	protected double y = (int)(Math.random() * 4960 - 2480);
 	private final int id;
 	private final Team team;
 	private final int moveSpeed;
@@ -22,13 +22,13 @@ public abstract class Player {
 	protected int yMove;
 	protected int hitDirection = 0;
 	private boolean dead = false;
-	private final WebSocket ws;
+	private final Client c;
 	protected final AtomicInteger hp;
 	private boolean hitting = false;
 	protected boolean hitten = false;
 	
-	public Player(WebSocket ws, Team team, int id, int hp, int moveSpeed, int hitbox) {
-		this.ws = ws;
+	public Player(Client c, Team team, int id, int hp, int moveSpeed, int hitbox) {
+		this.c = c;
 		this.id = id;
 		this.team = team;
 		this.hp = new AtomicInteger(hp);
@@ -78,11 +78,18 @@ public abstract class Player {
 		if (dead) return;
 		dead = true;
 		this.getTeam().getServer().addEvent(new KillEvent(this));
-		this.getTeam().getServer().addEvent(new SpawnEvent(ws, team, id));
+		this.getTeam().getServer().addEvent(new SpawnEvent(c, id));
 	}
 	
-	public WebSocket getSocket() {
-		return ws;
+	public void disconnect() {
+		if (!dead) {
+			dead = true;
+			this.getTeam().getServer().addEvent(new KillEvent(this));
+		}
+	}
+	
+	public Client getClient() {
+		return c;
 	}
 	
 	public void setHitting(boolean hitting) {
@@ -122,10 +129,11 @@ public abstract class Player {
 		int jMin = (yMin+2500)/250;
 		int jMax = (yMax+2500)/250;
 		boolean block = false;
+		final Team t = getTeam();
 		for (int i = iMin ; i < iMax && !block ; i++) {
 			for (int j = jMin ; j < jMax && !block ; j++) {
 				for (Player p : team.getServer().getTile(i, j).getPlayers()) {
-					if (p.getSquareDistance(this) < 4 * hitbox * p.hitbox) {
+					if (p.getTeam() != t && p.getSquareDistance(this) < 4 * hitbox * p.hitbox) {
 						block = true;
 						break;
 					}
@@ -152,7 +160,7 @@ public abstract class Player {
 				jo.put("id", this.id);
 				jo.put("hp", this.hp.get());
 				jo.put("ts", this.team.getServer().getTimestamp());
-				ws.send(jo.toString());
+				c.getSocket().send(jo.toString());
 			} catch (JSONException e) {
 				throw new RuntimeException(e);
 			} catch (InterruptedException e) {

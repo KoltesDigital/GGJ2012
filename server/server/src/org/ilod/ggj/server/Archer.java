@@ -10,8 +10,8 @@ public class Archer extends Player {
 	private static final int DOMMAGES = 200;
 	private static final int MOVE_SPEED = 30;
 	
-	public Archer(WebSocket ws, Team team, int id) {
-		super(ws, team, id, HP, MOVE_SPEED, HITBOX);
+	public Archer(Client c, Team team, int id) {
+		super(c, team, id, HP, MOVE_SPEED, HITBOX);
 	}
 	
 	@Override

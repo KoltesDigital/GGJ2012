@@ -8,12 +8,10 @@ import org.json.JSONObject;
 import net.tootallnate.websocket.WebSocket;
 
 public class MyIdEvent implements Event {
-	private final WebSocket ws;
-	private final int id;
+	private final Client c;
 	
-	public MyIdEvent(WebSocket ws, int id) {
-		this.ws = ws;
-		this.id = id;
+	public MyIdEvent(Client c) {
+		this.c = c;
 	}
 
 	@Override
@@ -21,8 +19,8 @@ public class MyIdEvent implements Event {
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("type", "id");
-			jo.put("id", id);
-			ws.send(jo.toString());
+			jo.put("id", c.getId());
+			c.getSocket().send(jo.toString());
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		} catch (NotYetConnectedException e) {

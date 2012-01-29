@@ -9,8 +9,8 @@ public class Horseman extends Player {
 	private static final int DOMMAGES = 200;
 	private static final int MOVE_SPEED = 45;
 	
-	public Horseman(WebSocket ws, Team team, int id) {
-		super(ws, team, id, HP, MOVE_SPEED, HITBOX);
+	public Horseman(Client c, Team team, int id) {
+		super(c, team, id, HP, MOVE_SPEED, HITBOX);
 	}
 	
 	@Override
@@ -27,15 +27,16 @@ public class Horseman extends Player {
 		final int yHit = (hitDirection == 0 ? -1 : hitDirection == 2 ? 1 : 0);
 		final int xHit = (hitDirection == 3 ? -1 : hitDirection == 1 ? 1 : 0);
 		for (Player p : this.getTeam().getServer().getPlayers()) {
+			if (p.getTeam() == this.getTeam()) continue;
 			int d = ALLONGE + p.getHitbox();
 			if (this.getSquareDistance(p) < d*d) {
 				double bc = y - p.y;
 				double ab = x - p.x;
 				boolean ok = false;
 				if (ab == 0) {
-					ok = ((bc == 0) || (bc * yHit > 0));
+					ok = ((bc == 0) || (bc * yHit < 0));
 				} else if (bc == 0) {
-					ok = (ab * xHit > 0);
+					ok = (ab * xHit < 0);
 				} else {
 					double a = Math.atan2(bc, ab);
 					if (xHit == 0) {
@@ -67,7 +68,7 @@ public class Horseman extends Player {
 				if (ok) {
 					hitten = true;
 					int dom = (int)(DOMMAGES * delta / 1000);
-					int hp = p.hp.addAndGet(dom);
+					int hp = p.hp.addAndGet(-dom);
 					if (hp <= 0 && dom+hp > 0) {
 						p.kill();
 					}

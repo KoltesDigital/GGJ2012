@@ -23,6 +23,7 @@ public class Server extends WebSocketServer {
 	private final Team brocoli = new Team(0, this);
 	private final Team carrote = new Team(1, this);
 	private final Map<WebSocket, Player> players = new ConcurrentHashMap<WebSocket, Player>();
+	private final Map<WebSocket, Client> clients = new ConcurrentHashMap<WebSocket, Client>();
 	private final Queue<Arrow> arrows = new ConcurrentLinkedQueue<Arrow>();
 	private long timestamp;
 	private final Turn turn = new Turn();
@@ -55,8 +56,13 @@ public class Server extends WebSocketServer {
 	@Override
 	public void onClientClose(WebSocket conn) {
 		Player p = players.remove(conn);
-		p.kill();
+		p.disconnect();
+		addEvent(new DisconnectEvent(p.getClient(), this));
 		p.getTeam().removeClient();
+	}
+	
+	public void removeClient(Client c) {
+		clients.remove(c.getSocket());
 	}
 	
 	@Override
@@ -77,9 +83,14 @@ public class Server extends WebSocketServer {
 			} else if ("move".equals(s)) {
 				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove"), jo.getInt("direction")));
 			} else if ("startHit".equals(s)) {
-				events.add(new StartHitEvent(players.get(conn), jo.getInt("direction")));
+				events.add(new StartHitEvent(players.get(conn)));
 			} else if ("stopHit".equals(s)) {
 				events.add(new StopHitEvent(players.get(conn)));
+			} else if ("change".equals(s)) {
+				Client c = clients.get(conn);
+				c.setWork(jo.getInt("character"));
+				Player p = players.get(conn);
+				if (p != null) p.kill();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -88,10 +99,12 @@ public class Server extends WebSocketServer {
 	
 	@Override
 	public void onClientOpen(WebSocket conn) {
-		events.add(new ListServEvent(conn, this));
+		Client c = new Client(conn, id.getAndIncrement(), getTeamToRenforce());
+		clients.put(conn, c);
+		events.add(new ListServEvent(c, this));
 		int n = id.getAndIncrement();
-		events.add(new SpawnEvent(conn, getTeamToRenforce(), n, 0));
-		events.add(new MyIdEvent(conn, n));
+		events.add(new SpawnEvent(c, n, 0));
+		events.add(new MyIdEvent(c));
 	}
 	
 	@Override
@@ -99,8 +112,8 @@ public class Server extends WebSocketServer {
 		conn.close();
 	}
 	
-	public void addPlayer(WebSocket ws, Player p) {
-		players.put(ws, p);
+	public void addPlayer(Client c, Player p) {
+		players.put(c.getSocket(), p);
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("type", "spawn");
@@ -117,7 +130,7 @@ public class Server extends WebSocketServer {
 		}
 	}
 	
-	public void sendServ(WebSocket ws) {
+	public void sendServ(Client c) {
 		JSONObject jo = new JSONObject();
 		for (Player p : players.values()) {
 			try {
@@ -127,7 +140,7 @@ public class Server extends WebSocketServer {
 				jo.put("x", p.getX());
 				jo.put("y", p.getY());
 				jo.put("work", p.getType());
-				ws.send(jo.toString());
+				c.getSocket().send(jo.toString());
 			} catch (JSONException e) {
 				throw new RuntimeException(e);
 			} catch (InterruptedException e) {
@@ -137,7 +150,7 @@ public class Server extends WebSocketServer {
 	}
 	
 	public void removePlayer(Player p) {
-		players.remove(p.getSocket());
+		players.remove(p.getClient().getSocket());
 	}
 	
 	public void addEvent(Event e) {

@@ -7,38 +7,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SpawnEvent implements Event {
-	private final WebSocket ws;
+	private final Client c;
 	private final int id;
-	private final Team team;
 	private final long ts;
 	
-	public SpawnEvent(WebSocket ws, Team team, int id) {
-		this(ws, team, id, System.currentTimeMillis() + 3000);
+	public SpawnEvent(Client c, int id) {
+		this(c, id, System.currentTimeMillis() + 3000);
 	}
 
-	public SpawnEvent(WebSocket ws, Team team, int id, long ts) {
-		this.ws = ws;
+	public SpawnEvent(Client c, int id, long ts) {
+		this.c = c;
 		this.id = id;
-		this.team = team;
 		this.ts = ts;
 	}
 	
 	public boolean applyEvent() {
 		if (System.currentTimeMillis() < ts) return false;
 		Player p;
-		switch ((int)(Math.random()*3)) {
+		switch (c.getWork()) {
 		case 0:
-		case 1:
-		case 2:
-			p = new Lancer(ws, team, id);
+			p = new Lancer(c, c.getTeam(), id);
 			break;
-		case 3:
-			p = new Horseman(ws, team, id);
+		case 1:
+			p = new Horseman(c, c.getTeam(), id);
 			break;
 		default:
-			p = new Archer(ws, team, id);
+			p = new Archer(c, c.getTeam(), id);
 		}
-		team.getServer().addPlayer(ws, p);
+		c.getTeam().getServer().addPlayer(c, p);
 		return true;
 	}
 }
