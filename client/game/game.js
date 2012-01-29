@@ -6,6 +6,7 @@ goog.require('lime.Layer');;
 goog.require('lime.Scene');
 goog.require('lime.Sprite');
 goog.require('lime.fill.Image');
+goog.require('lime.animation.FadeTo');
 goog.require('constants');
 goog.require('Arrow');
 goog.require('Player');
@@ -83,12 +84,12 @@ game.setCurrentPlayer = function(id) {
 	this.currentPlayer.addToLayer(game.currentPlayerLayer);
 	
 	var leftKey, rightKey, upKey, downKey;
-	var directionX = 0, directionY = 0, direction;
-	var cameraX = this.currentPlayer.x, cameraY = this.currentPlayer.y;
+	directionX = 0, directionY = 0, direction = 0;
 	var cooldownTime = 0;
 	var attacking = false;
 	
-	deltaTime = 50;
+	this.cameraX = this.currentPlayer.x;
+	this.cameraY = this.currentPlayer.y;
 	
 	goog.events.listen(window, ['keydown'], function(e) {
 		//console.log(e.keyCode);
@@ -213,47 +214,7 @@ game.setCurrentPlayer = function(id) {
 		for (key in game.arrows) {
 			game.arrows[key].update(dt);
 		}
-		
-		var targetX = game.currentPlayer.x;
-		if (directionX != 0) {
-			targetX += directionX * constants.cameraGap;
-		} else if (game.currentPlayer.direction == constants.directions.left) {
-			targetX -= constants.cameraGap;
-		} else if (game.currentPlayer.direction == constants.directions.right) {
-			targetX += constants.cameraGap;
-		}
-
-		var targetY = game.currentPlayer.y;
-		if (directionY != 0) {
-			targetY += directionY * constants.cameraGap;
-		} else if (game.currentPlayer.direction == constants.directions.up) {
-			targetY -= constants.cameraGap;
-		} else if (game.currentPlayer.direction == constants.directions.down) {
-			targetY += constants.cameraGap;
-		}
-		
-		cameraX += (targetX - cameraX) * constants.cameraRatio * dt;
-		cameraY += (targetY - cameraY) * constants.cameraRatio * dt;
-		game.mainLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
-		
-		var x = Math.floor(cameraX / constants.backgroundWidth);
-		var y = Math.floor(cameraY / constants.backgroundHeight + 0.5);
-		var k = 0;
-		for (var i = x-1; i <= x+2; ++i) {
-			for (var j = y-1; j <= y+1; ++j) {
-				game.bgSprites[k].setPosition(i*constants.backgroundWidth, j*constants.backgroundHeight);
-				++k;
-			}
-		}
 	});
-	
-	this.ping = function() {
-		socket.send({
-			type: "ping",
-			data: Date.now()
-		});
-	};
-	this.ping();
 };
 
 game.start = function() {
@@ -275,17 +236,88 @@ game.start = function() {
 	this.arrowLayer = new lime.Layer();
 	this.mainLayer.appendChild(this.arrowLayer);
 	
+	this.titleLayer = new lime.Layer();
+	scene.appendChild(this.titleLayer);
+	
 	this.bgSprites = [];
 	for (var i = 0; i < 12; ++i) {
 		var sprite = new lime.Sprite().setFill(constants.imagesPath + 'grass.png');
 		this.bgLayer.appendChild(sprite);
 		this.bgSprites[i] = sprite;
 	}
-
+	
+	this.welcomeSprite = new lime.Sprite().setFill(constants.imagesPath + 'titre.png');
+	this.titleLayer.appendChild(this.welcomeSprite).setPosition(constants.screenWidth / 2, constants.screenHeight / 2);
+	
 	director.replaceScene(scene);
 	
+	this.cameraX = 0;
+	this.cameraY = 0;
+
+	deltaTime = 50;
+
 	socket = new SocketMock(this, constants.server);
 	socket.init();
+
+	goog.events.listenOnce(window, ['keydown'], function(e) {
+		switch (e.keyCode) {
+		case 32: //space
+			socket.send({
+				type: "spawn"
+			});
+			var fadehalf = new lime.animation.FadeTo(0).setDuration(1);
+			game.welcomeSprite.runAction(fadehalf);
+			break;
+		}
+	});
+
+	lime.scheduleManager.schedule(function(dt) {
+		var targetX, targetY;
+		
+		if (game.currentPlayer) {
+			targetX = game.currentPlayer.x;
+			if (directionX != 0) {
+				targetX += directionX * constants.cameraGap;
+			} else if (game.currentPlayer.direction == constants.directions.left) {
+				targetX -= constants.cameraGap;
+			} else if (game.currentPlayer.direction == constants.directions.right) {
+				targetX += constants.cameraGap;
+			}
+	
+			targetY = game.currentPlayer.y;
+			if (directionY != 0) {
+				targetY += directionY * constants.cameraGap;
+			} else if (game.currentPlayer.direction == constants.directions.up) {
+				targetY -= constants.cameraGap;
+			} else if (game.currentPlayer.direction == constants.directions.down) {
+				targetY += constants.cameraGap;
+			}
+		} else {
+			targetX = targetY = 0;
+		}
+		
+		game.cameraX += (targetX - game.cameraX) * constants.cameraRatio * dt;
+		game.cameraY += (targetY - game.cameraY) * constants.cameraRatio * dt;
+		game.mainLayer.setPosition(constants.screenWidth / 2 - game.cameraX, constants.screenHeight / 2 - game.cameraY);
+		
+		var x = Math.floor(game.cameraX / constants.backgroundWidth);
+		var y = Math.floor(game.cameraY / constants.backgroundHeight + 0.5);
+		var k = 0;
+		for (var i = x-1; i <= x+2; ++i) {
+			for (var j = y-1; j <= y+1; ++j) {
+				game.bgSprites[k].setPosition(i*constants.backgroundWidth, j*constants.backgroundHeight);
+				++k;
+			}
+		}
+	});
+
+	this.ping = function() {
+		socket.send({
+			type: "ping",
+			data: Date.now()
+		});
+	};
+	this.ping();
 };
 
 goog.exportSymbol('game.start', game.start);
