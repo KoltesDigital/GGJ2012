@@ -78,7 +78,7 @@ public abstract class Player {
 		if (dead) return;
 		dead = true;
 		this.getTeam().getServer().addEvent(new KillEvent(this));
-		this.getTeam().getServer().addEvent(new SpawnEvent(c, id));
+		this.getTeam().getServer().addEvent(new SpawnEvent(c));
 	}
 	
 	public void disconnect() {

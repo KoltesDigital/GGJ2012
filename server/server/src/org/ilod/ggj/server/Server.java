@@ -102,8 +102,7 @@ public class Server extends WebSocketServer {
 		Client c = new Client(conn, id.getAndIncrement(), getTeamToRenforce());
 		clients.put(conn, c);
 		events.add(new ListServEvent(c, this));
-		int n = id.getAndIncrement();
-		events.add(new SpawnEvent(c, n, 0));
+		events.add(new SpawnEvent(c, 0));
 		events.add(new MyIdEvent(c));
 	}
 	
