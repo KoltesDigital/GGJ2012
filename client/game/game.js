@@ -269,7 +269,7 @@ game.start = function() {
 
 	director.replaceScene(scene);
 	
-	socket = new SocketMock(this, constants.server);
+	socket = new Socket(this, constants.server);
 	socket.init();
 };
 
