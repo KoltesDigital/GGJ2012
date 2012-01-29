@@ -1,6 +1,5 @@
 package org.ilod.ggj.server;
 
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONException;
@@ -14,8 +13,8 @@ public abstract class Player {
 	private static final int Y_MIN = -2480;
 	private static final int Y_MAX =  2480;
 	private final int hitbox;
-	protected double x = ThreadLocalRandom.current().nextInt(-2500, 2500);
-	protected double y = ThreadLocalRandom.current().nextInt(-2500, 2500);
+	protected double x = /*(int)(Math.random() * 5000 - 2500)*/ 256;
+	protected double y = /*(int)(Math.random() * 5000 - 2500)*/ 256;
 	private final int id;
 	private final Team team;
 	private final int moveSpeed;
@@ -70,6 +69,7 @@ public abstract class Player {
 	}
 	
 	public void setDirection(int xMove, int yMove) {
+		if (dead) return;
 		this.xMove = xMove;
 		this.yMove = yMove;
 	}
@@ -78,6 +78,7 @@ public abstract class Player {
 		if (dead) return;
 		dead = true;
 		this.getTeam().getServer().addEvent(new KillEvent(this));
+		this.getTeam().getServer().addEvent(new SpawnEvent(ws, team, id));
 	}
 	
 	public WebSocket getSocket() {
@@ -93,6 +94,7 @@ public abstract class Player {
 	}
 	
 	public void move(long delta) {
+		if (dead) return;
 		double oldX = x;
 		double oldY = y;
 		x += xMove * delta * moveSpeed / 100.0;

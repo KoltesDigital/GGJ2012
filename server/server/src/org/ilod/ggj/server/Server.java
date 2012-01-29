@@ -43,12 +43,12 @@ public class Server extends WebSocketServer {
 	}
 	
 	private Team getTeamToRenforce() {
-		if (brocoli.getSize() > carrote.getSize()) {
-			carrote.addClient();
-			return carrote;
-		} else {
+		if (brocoli.getSize() < carrote.getSize()) {
 			brocoli.addClient();
 			return brocoli;
+		} else {
+			carrote.addClient();
+			return carrote;
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class Server extends WebSocketServer {
 				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove"), jo.getInt("direction")));
 			} else if ("startHit".equals(s)) {
 				events.add(new StartHitEvent(players.get(conn), jo.getInt("direction")));
-			} else if ("stoptHit".equals(s)) {
+			} else if ("stopHit".equals(s)) {
 				events.add(new StopHitEvent(players.get(conn)));
 			}
 		} catch (JSONException e) {
@@ -90,7 +90,7 @@ public class Server extends WebSocketServer {
 	public void onClientOpen(WebSocket conn) {
 		events.add(new ListServEvent(conn, this));
 		int n = id.getAndIncrement();
-		events.add(new SpawnEvent(conn, getTeamToRenforce(), n));
+		events.add(new SpawnEvent(conn, getTeamToRenforce(), n, 0));
 		events.add(new MyIdEvent(conn, n));
 	}
 	
