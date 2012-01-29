@@ -85,6 +85,8 @@ game.setCurrentPlayer = function(id) {
 	var leftKey, rightKey, upKey, downKey;
 	var directionX = 0, directionY = 0, direction;
 	var cameraX = this.currentPlayer.x, cameraY = this.currentPlayer.y;
+	var cooldownTime = 0;
+	var attacking = false;
 	
 	deltaTime = 50;
 	
@@ -95,12 +97,14 @@ game.setCurrentPlayer = function(id) {
 		switch (e.keyCode) {
 		case 32: //space
 			if (game.currentPlayer.type == constants.characters.archer) {
-				
-				socket.send({
-					type: "arrow",
-					direction: game.currentPlayer.direction
-				});
-			} else {
+				if (cooldownTime <= Date.now()) {
+					cooldownTime = Date.now() + constants.cooldownArrow;
+					socket.send({
+						type: "arrow"
+					});
+				}
+			} else if (!attacking) {
+				attacking = true;
 				game.currentPlayer.startAttacking();
 				socket.send({
 					type: "startHit",
@@ -162,6 +166,7 @@ game.setCurrentPlayer = function(id) {
 		switch (e.keyCode) {
 		case 32: //space
 			if (game.currentPlayer.type != constants.characters.archer) {
+				attacking = false;
 				game.currentPlayer.stopAttacking();
 				socket.send({
 					type: "stopHit"
