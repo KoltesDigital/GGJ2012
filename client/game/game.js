@@ -69,9 +69,17 @@ game.removeArrow = function(id) {
 	}
 };
 
+game.ping = function() {
+	socket.send({
+		type: "ping",
+		data: Date.now()
+	});
+};
+
 game.pong = function(obj) {
 	deltaTime = (Date.now() - obj.data) / 2;
 	setTimeout(this.ping, constants.pingInterval);
+	console.log(deltaTime);
 };
 
 game.collide = function() {
@@ -315,14 +323,6 @@ game.start = function() {
 			}
 		}
 	});
-
-	this.ping = function() {
-		socket.send({
-			type: "ping",
-			data: Date.now()
-		});
-	};
-	this.ping();
 };
 
 goog.exportSymbol('game.start', game.start);

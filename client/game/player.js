@@ -87,8 +87,8 @@ Player.prototype.stopAttacking = function() {
 Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
 	var step = constants.characterSpeed * (time + deltaTime - Date.now());
 	this.setDirection(dx, dy);
-	this.targetX = x - this.directionX * step;
-	this.targetY = y - this.directionY * step;
+	this.targetX = x + this.directionX * step;
+	this.targetY = y + this.directionY * step;
 };
 
 Player.prototype.setPosition = function(x, y) {
