@@ -4,10 +4,25 @@ goog.require('constants');
 goog.require('CharacterAnimation');
 goog.require('lime.animation.KeyframeAnimation');
 
+var anchors = [
+               {
+            	   x: 0.203125,
+            	   y: 0.48046875
+               },
+               {
+            	   x: 0.375,
+            	   y: 0.46875
+               },
+               {
+            	   x: 0.203125,
+            	   y: 0.48046875
+               }
+               ];
+
 Player = function(id) {
 	this.id = id;
 	this.living = false;
-	
+
 	this.sprite = new lime.Sprite();
 };
 
@@ -20,6 +35,7 @@ Player.prototype.removeFromLayer = function(layer) {
 };
 
 Player.prototype.loadSprite = function() {
+	var anchor = anchors[this.character];
 	this.sprite.setAnchorPoint(0.203125, 0.48046875);
 	this.animation = new CharacterAnimation(this.character, this.team).setDirection(this.direction);
 	this.sprite.runAction(this.animation);
@@ -32,19 +48,19 @@ Player.prototype.unloadSprite = function() {
 Player.prototype.spawn = function(x, y, character, team) {
 	this.x = this.targetX = x;
 	this.y = this.targetY = y;
-	
+
 	this.living = true;
 	this.direction = constants.directions.right;
 	this.directionX = 0;
 	this.directionY = 0;
-		
+
 	if (this.character != character || this.team != team) {
 		this.unloadSprite();
 		this.character = character;
 		this.team = team;
 		this.loadSprite();
 	}
-	
+
 	this.sprite.setPosition(x, y);
 	this.animation.idle();
 };
@@ -71,8 +87,8 @@ Player.prototype.stopAttacking = function() {
 Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
 	var step = constants.characterSpeed * (time + deltaTime - Date.now());
 	this.setDirection(dx, dy);
-	this.targetX = x + this.directionX * step;
-	this.targetY = y + this.directionY * step;
+	this.targetX = x - this.directionX * step;
+	this.targetY = y - this.directionY * step;
 };
 
 Player.prototype.setDirection = function(x, y, direction) {
@@ -81,12 +97,12 @@ Player.prototype.setDirection = function(x, y, direction) {
 	this.directionY = y;
 
 	this.animation.setWalking(walking);
-	
+
 	if (walking) {
 		var norm = Math.sqrt(x*x + y*y);
 		this.directionX /= norm;
 		this.directionY /= norm;
-		
+
 		if (direction !== undefined) {
 			this.direction = direction;
 		} else {
@@ -106,9 +122,13 @@ Player.prototype.setDirection = function(x, y, direction) {
 
 Player.prototype.update = function(dt) {
 	var step = constants.characterSpeed * dt;
+	if (this.character == constants.characters.knight) {
+		step *= 1.5;
+	}
+	
 	this.targetX += this.directionX * step;
 	this.targetY += this.directionY * step;
-	
+
 	var dx = this.targetX - this.x;
 	var dy = this.targetY - this.y;
 	var distance2 = dx*dx + dy*dy;

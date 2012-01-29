@@ -4,9 +4,9 @@ goog.exportSymbol('constants.backgroundHeight', 500);
 
 goog.exportSymbol('constants.backgroundWidth', 500);
 
-goog.exportSymbol('constants.cameraGap', 100);
+goog.exportSymbol('constants.cameraGap', 200);
 
-goog.exportSymbol('constants.cameraRatio', 0.008);
+goog.exportSymbol('constants.cameraRatio', 0.006);
 
 goog.exportSymbol('constants.characters', {
 	lancer: 0,
@@ -15,6 +15,8 @@ goog.exportSymbol('constants.characters', {
 });
 
 goog.exportSymbol('constants.characterSpeed', 0.3);
+
+goog.exportSymbol('constants.cooldownArrow', 2000);
 
 goog.exportSymbol('constants.directions', {
 	up: 0,

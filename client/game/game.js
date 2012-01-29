@@ -94,11 +94,19 @@ game.setCurrentPlayer = function(id) {
 		
 		switch (e.keyCode) {
 		case 32: //space
-			game.currentPlayer.startAttacking();
-			socket.send({
-				type: "startHit",
-				direction: game.currentPlayer.direction
-			});
+			if (game.currentPlayer.type == constants.characters.archer) {
+				
+				socket.send({
+					type: "arrow",
+					direction: game.currentPlayer.direction
+				});
+			} else {
+				game.currentPlayer.startAttacking();
+				socket.send({
+					type: "startHit",
+					direction: game.currentPlayer.direction
+				});
+			}
 			break;
 			
 		case 37: //left
@@ -153,10 +161,12 @@ game.setCurrentPlayer = function(id) {
 	goog.events.listen(window, ['keyup'], function(e) {
 		switch (e.keyCode) {
 		case 32: //space
-			game.currentPlayer.stopAttacking();
-			socket.send({
-				type: "stopHit"
-			});
+			if (game.currentPlayer.type != constants.characters.archer) {
+				game.currentPlayer.stopAttacking();
+				socket.send({
+					type: "stopHit"
+				});
+			}
 			break;
 			
 		case 37: //left
@@ -262,7 +272,7 @@ game.start = function() {
 	
 	this.bgSprites = [];
 	for (var i = 0; i < 12; ++i) {
-		var sprite = new lime.Sprite().setFill(constants.imagesPath + 'grass.jpg');
+		var sprite = new lime.Sprite().setFill(constants.imagesPath + 'grass.png');
 		this.bgLayer.appendChild(sprite);
 		this.bgSprites[i] = sprite;
 	}
