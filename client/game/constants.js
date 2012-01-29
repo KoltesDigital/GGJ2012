@@ -16,6 +16,8 @@ goog.exportSymbol('constants.characters', {
 
 goog.exportSymbol('constants.characterSpeed', 0.3);
 
+goog.exportSymbol('constants.cooldownArrow', 2000);
+
 goog.exportSymbol('constants.directions', {
 	up: 0,
 	right: 1,

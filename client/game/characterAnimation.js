@@ -1,12 +1,9 @@
 goog.provide('CharacterAnimation');
 
 goog.require('goog.events');
-goog.require('lime.ASSETS.fantassin_b.zwoptex');
-goog.require('lime.ASSETS.fantassin_c.zwoptex');
-goog.require('lime.ASSETS.chevalier_b.zwoptex');
-goog.require('lime.ASSETS.chevalier_c.zwoptex');
-goog.require('lime.ASSETS.archer_b.zwoptex');
-goog.require('lime.ASSETS.archer_c.zwoptex');
+goog.require('lime.ASSETS.fantassin.zwoptex');
+goog.require('lime.ASSETS.chevalier.zwoptex');
+goog.require('lime.ASSETS.archer.zwoptex');
 goog.require('lime.parser.ZWOPTEX');
 goog.require('lime.SpriteSheet');
 goog.require('lime.animation.KeyframeAnimation');
@@ -24,31 +21,31 @@ var sheets = [
               [
                {
             	   filename: 'fantassin_b.png',
-            	   metadata: lime.ASSETS.fantassin_b.zwoptex
+            	   metadata: lime.ASSETS.fantassin.zwoptex
                },
                {
             	   filename: 'fantassin_c.png',
-            	   metadata: lime.ASSETS.fantassin_c.zwoptex
+            	   metadata: lime.ASSETS.fantassin.zwoptex
                }
                ],
                [
                 {
              	   filename: 'chevalier_b.png',
-             	   metadata: lime.ASSETS.chevalier_b.zwoptex
+             	   metadata: lime.ASSETS.chevalier.zwoptex
                 },
                 {
              	   filename: 'chevalier_c.png',
-             	   metadata: lime.ASSETS.chevalier_c.zwoptex
+             	   metadata: lime.ASSETS.chevalier.zwoptex
                 }
                 ],
                 [
                  {
               	   filename: 'archer_b.png',
-              	   metadata: lime.ASSETS.archer_b.zwoptex
+              	   metadata: lime.ASSETS.archer.zwoptex
                  },
                  {
               	   filename: 'archer_c.png',
-              	   metadata: lime.ASSETS.archer_c.zwoptex
+              	   metadata: lime.ASSETS.archer.zwoptex
                  }
                  ],
               ];

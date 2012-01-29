@@ -95,6 +95,7 @@ game.setCurrentPlayer = function(id) {
 		switch (e.keyCode) {
 		case 32: //space
 			if (game.currentPlayer.type == constants.characters.archer) {
+				
 				socket.send({
 					type: "arrow",
 					direction: game.currentPlayer.direction
