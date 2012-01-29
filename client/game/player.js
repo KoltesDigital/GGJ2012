@@ -85,10 +85,11 @@ Player.prototype.stopAttacking = function() {
 };
 
 Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
-	var step = constants.characterSpeed * (time + deltaTime - Date.now());
+	var step = constants.characterSpeed * (Date.now() - time - deltaTime);
 	this.setDirection(dx, dy);
 	this.targetX = x + this.directionX * step;
 	this.targetY = y + this.directionY * step;
+	console.log('step', step, Date.now(), time, deltaTime);
 };
 
 Player.prototype.setPosition = function(x, y) {
@@ -126,26 +127,36 @@ Player.prototype.setDirection = function(x, y, direction) {
 };
 
 Player.prototype.update = function(dt) {
-	var step = constants.characterSpeed * dt;
-	if (this.character == constants.characters.knight) {
-		step *= 1.5;
-	}
+	if (this.directionX != 0 || this.directionY != 0) {
+		var step = constants.characterSpeed * dt;
+		if (this.character == constants.characters.knight) {
+			step *= 1.5;
+		}
+		
+		this.targetX += this.directionX * step;
+		this.targetY += this.directionY * step;
 	
-	this.targetX += this.directionX * step;
-	this.targetY += this.directionY * step;
-
-	var dx = this.targetX - this.x;
-	var dy = this.targetY - this.y;
-	var distance2 = dx*dx + dy*dy;
-	if (distance2 < constants.farDistanceSquared && distance2 > step * step * 1.05) {
-		var ratio = step / Math.sqrt(distance2);
-		this.x += dx * ratio;
-		this.y += dy * ratio;
+		var dx = this.targetX - this.x;
+		var dy = this.targetY - this.y;
+		var distance2 = dx*dx + dy*dy;
+		var step2 = step * step;
+		if (distance2 < constants.farDistanceSquared && distance2 > step2 * 1.05) {
+			var ratio = step / Math.sqrt(distance2);
+			this.x += dx * ratio;
+			this.y += dy * ratio;
+			console.log('slide', this.x, this.y);
+		} else {
+			this.x = this.targetX;
+			this.y = this.targetY;
+			console.log('jump', this.x, this.y, this.directionX, this.directionY, step);
+		}
+	
+		this.animation.setWalking(true);
 	} else {
 		this.x = this.targetX;
 		this.y = this.targetY;
+		this.animation.setWalking(false);
 	}
-
-	this.animation.setWalking(dx != 0 || dy != 0);
+	
 	this.sprite.setPosition(this.x, this.y);
 };

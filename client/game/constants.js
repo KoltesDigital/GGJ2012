@@ -25,7 +25,7 @@ goog.exportSymbol('constants.directions', {
 	left: 3
 });
 
-goog.exportSymbol('constants.farDistanceSquared', 500);
+goog.exportSymbol('constants.farDistanceSquared', 5000);
 
 goog.exportSymbol('constants.imagesPath', 'images/');
 

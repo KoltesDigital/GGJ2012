@@ -9,7 +9,7 @@ Socket = function(game, server) {
 
 Socket.prototype.init = function() {
 	this.sock.onopen = function(evt) {
-
+		game.ping();
 	};
 	
 	this.sock.onclose = function(evt) {

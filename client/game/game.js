@@ -24,13 +24,15 @@ game.addPlayer = function(player) {
 
 game.removePlayer = function(id) {
 	var player = this.players[id];
-	if (player == this.currentPlayer) {
-		delete this.currentPlayer;
-		player.removeFromLayer(game.currentPlayerLayer);
-	} else {
-		player.removeFromLayer(game.playersLayer);
+	if (player) {
+		if (player == this.currentPlayer) {
+			delete this.currentPlayer;
+			player.removeFromLayer(game.currentPlayerLayer);
+		} else {
+			player.removeFromLayer(game.playersLayer);
+		}
+		delete this.players[id];
 	}
-	delete this.players[id];
 };
 
 game.changeCharacter = function() {
@@ -77,9 +79,10 @@ game.ping = function() {
 };
 
 game.pong = function(obj) {
-	deltaTime = (Date.now() - obj.data) / 2;
+	var now = Date.now();
+	deltaTime = (now - obj.data) / 2 + now - obj.ts;
+	
 	setTimeout(this.ping, constants.pingInterval);
-	console.log(deltaTime);
 };
 
 game.collide = function() {
