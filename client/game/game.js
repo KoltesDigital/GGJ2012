@@ -234,11 +234,10 @@ game.start = function() {
 	this.currentPlayerLayer = new lime.Layer();
 	this.arrowLayer = new lime.Layer();
 	
-	socket = new SocketMock(this, constants.server);
+	socket = new Socket(this, constants.server);
 
 	game.newCharacter = 0;
 	game.newTeam = 0;
-	game.changeCharacter();
 	
 	director.replaceScene(scene);
 };
