@@ -28,6 +28,7 @@ public class Horseman extends Player {
 		final int xHit = (hitDirection == 3 ? -1 : hitDirection == 1 ? 1 : 0);
 		for (Player p : this.getTeam().getServer().getPlayers()) {
 			if (p.getTeam() == this.getTeam()) continue;
+			if (!p.isHitting() && (p instanceof Lancer)) continue;
 			int d = ALLONGE + p.getHitbox();
 			if (this.getSquareDistance(p) < d*d) {
 				double bc = y - p.y;

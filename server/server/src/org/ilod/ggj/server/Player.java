@@ -22,7 +22,7 @@ public abstract class Player {
 	private boolean dead = false;
 	private final Client c;
 	protected final AtomicInteger hp;
-	private boolean hitting = false;
+	protected boolean hitting = false;
 	protected boolean hitten = false;
 	
 	public Player(Client c, Team team, int id, int hp, int moveSpeed, int hitbox) {
@@ -123,8 +123,8 @@ public abstract class Player {
 		int jMin = (yMin+2500)/250;
 		int jMax = (yMax+2500)/250;
 		final Team t = getTeam();
-		for (int i = iMin ; i < iMax && !collision; i++) {
-			for (int j = jMin ; j < jMax && !collision ; j++) {
+		for (int i = iMin ; i <= iMax && !collision; i++) {
+			for (int j = jMin ; j <= jMax && !collision ; j++) {
 				for (Player p : team.getServer().getTile(i, j).getPlayers()) {
 					if (p.getTeam() != t && p.getSquareDistance(this) < 4 * hitbox * p.hitbox) {
 						collision = true;
@@ -134,6 +134,7 @@ public abstract class Player {
 			}
 		}
 		if (collision) {
+			System.out.println("COLLISION!!!");
 			x = oldX;
 			y = oldY;
 			team.getServer().addEvent(new MoveEvent(this, 0, 0, hitDirection, true));

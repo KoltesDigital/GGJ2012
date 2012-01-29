@@ -13,6 +13,7 @@ public class KillEvent implements Event {
 	@Override
 	public boolean applyEvent() {
 		p.getTeam().getServer().removePlayer(p);
+		p.getTeam().getServer().getTileAtPos((int)p.getX(), (int)p.getY()).removePlayer(p);
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("type", "dead");
