@@ -39,6 +39,8 @@ game.getCurrentPlayer = function(id) {
 game.setCurrentPlayer = function(id) {
 	this.player = this.players[id];
 	if (this.player) {
+		scene.appendChild(this.mainLayer);
+		
 		this.player.removeFromLayer(game.playersLayer);
 		this.player.addToLayer(game.currentPlayerLayer);
 		
@@ -167,8 +169,17 @@ game.setCurrentPlayer = function(id) {
 				
 				cameraX += (targetX - cameraX) * constants.cameraRatio * dt;
 				cameraY += (targetY - cameraY) * constants.cameraRatio * dt;
-				game.playersLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
-				game.currentPlayerLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
+				game.mainLayer.setPosition(constants.screenWidth / 2 - cameraX, constants.screenHeight / 2 - cameraY);
+
+				var x = Math.floor(cameraX / constants.backgroundWidth);
+				var y = Math.floor(cameraY / constants.backgroundHeight + 0.5);
+				var k = 0;
+				for (var i = x-1; i <= x+2; ++i) {
+					for (var j = y-1; j <= y+1; ++j) {
+						game.bgSprites[k].setPosition(i*constants.backgroundWidth, j*constants.backgroundHeight);
+						++k;
+					}
+				}
 			}
 		});
 		
@@ -226,13 +237,27 @@ game.dead = function(id) {
 game.start = function() {
 	director = new lime.Director(document.body, constants.screenWidth, constants.screenHeight);
 	scene = new lime.Scene();
+
+	this.mainLayer = new lime.Layer();
+	
+	this.bgLayer = new lime.Layer();
+	this.mainLayer.appendChild(this.bgLayer);
 	
 	this.playersLayer = new lime.Layer();
+	this.mainLayer.appendChild(this.playersLayer);
+	
 	this.currentPlayerLayer = new lime.Layer();
+	this.mainLayer.appendChild(this.currentPlayerLayer);
+	
 	this.arrowLayer = new lime.Layer();
-	scene.appendChild(this.playersLayer);
-	scene.appendChild(this.currentPlayerLayer);
-	scene.appendChild(this.arrowLayer);
+	this.mainLayer.appendChild(this.arrowLayer);
+	
+	this.bgSprites = [];
+	for (var i = 0; i < 12; ++i) {
+		var sprite = new lime.Sprite().setFill(constants.imagesPath + 'grass.jpg');
+		this.bgLayer.appendChild(sprite);
+		this.bgSprites[i] = sprite;
+	}
 	
 	socket = new Socket(this, constants.server);
 
