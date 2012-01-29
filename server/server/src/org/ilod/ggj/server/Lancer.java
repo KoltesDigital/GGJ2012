@@ -29,7 +29,9 @@ public class Lancer extends Player {
 		for (Player p : this.getTeam().getServer().getPlayers()) {
 			if (p.getTeam() == this.getTeam()) continue;
 			int d = ALLONGE + p.getHitbox();
+			System.out.println("a");
 			if (this.getSquareDistance(p) < d*d) {
+				System.out.println("b");
 				double bc = y - p.y;
 				double ab = x - p.x;
 				boolean ok = false;

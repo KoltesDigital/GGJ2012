@@ -56,9 +56,8 @@ public class Server extends WebSocketServer {
 	@Override
 	public void onClientClose(WebSocket conn) {
 		Player p = players.remove(conn);
-		p.disconnect();
-		addEvent(new DisconnectEvent(p.getClient(), this));
-		p.getTeam().removeClient();
+		if (p != null) p.disconnect();
+		addEvent(new DisconnectEvent(clients.get(conn), this));
 	}
 	
 	public void removeClient(Client c) {
