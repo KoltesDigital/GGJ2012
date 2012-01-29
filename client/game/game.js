@@ -55,7 +55,7 @@ game.setCurrentPlayer = function(id) {
 			case 32: //space
 				game.player.startAttacking();
 				socket.send({
-					type: "startAttack",
+					type: "startHit",
 					direction: game.player.direction
 				});
 				break;
@@ -108,7 +108,7 @@ game.setCurrentPlayer = function(id) {
 			case 32: //space
 				game.player.stopAttacking();
 				socket.send({
-					type: "stopAttack"
+					type: "stopHit"
 				});
 				break;
 			case 37: //left
@@ -188,9 +188,6 @@ game.changeCharacter = function() {
 		character: this.newCharacter,
 		team: this.newTeam
 	});
-	scene.appendChild(this.playersLayer);
-	scene.appendChild(this.currentPlayerLayer);
-	scene.appendChild(this.arrowLayer);
 };
 
 game.pong = function(obj) {
@@ -233,6 +230,9 @@ game.start = function() {
 	this.playersLayer = new lime.Layer();
 	this.currentPlayerLayer = new lime.Layer();
 	this.arrowLayer = new lime.Layer();
+	scene.appendChild(this.playersLayer);
+	scene.appendChild(this.currentPlayerLayer);
+	scene.appendChild(this.arrowLayer);
 	
 	socket = new Socket(this, constants.server);
 

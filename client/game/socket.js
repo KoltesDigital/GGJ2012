@@ -20,11 +20,13 @@ Socket = function(game, server) {
 	
 	this.sock.onmessage = function(evt) {
 		obj = eval('('+evt.data+')');
+		console.log(obj.type);
 		switch (obj.type) {
 		case "dead":
-			game.getPlayer(obj.id).dead();
+			game.getCurrentPlayer(obj.id).dead();
 			break;
 		case "id":
+			console.log(obj.id);
 			game.setCurrentPlayer(obj.id);
 			break;
 		case "arrow":
@@ -37,7 +39,7 @@ Socket = function(game, server) {
 			game.removeArrow(obj.id);
 			break;
 		case "move":
-			var player = game.getPlayer(obj.id);
+			var player = game.getCurrentPlayer(obj.id);
 			player.setPosition(obj.x, obj.y);
 			player.setDirection(obj.xMove, obj.yMove);
 			break;
@@ -48,7 +50,7 @@ Socket = function(game, server) {
 			
 		case "spawn":
 			var player = new Player(obj.id, obj.work, obj.team);
-			player.setDirection(obj.x, obj.y);
+			player.setPosition(obj.x, obj.y);
 			game.addPlayer(player);
 			break;
 		}
