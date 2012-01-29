@@ -5,8 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.tootallnate.websocket.WebSocket;
-
 public abstract class Player {
 	private static final int X_MIN = -2480;
 	private static final int X_MAX =  2480;
@@ -102,23 +100,19 @@ public abstract class Player {
 	
 	public void move(long delta) {
 		if (dead) return;
+		boolean collision = false;
 		double oldX = x;
 		double oldY = y;
-		x += xMove * delta * moveSpeed / 100.0;
-		y += yMove * delta * moveSpeed / 100.0;
-		if (x > X_MAX) {
-			x = X_MAX;
-			setDirection(0, 0);
-		} else if (x < X_MIN) {
-			x = X_MIN;
-			setDirection(0, 0);
+		if (yMove == 0) {
+			x += xMove * delta * moveSpeed / 100.0;
+		} else if (xMove == 0) {
+			y += yMove * delta * moveSpeed / 100.0;
+		} else {
+			x += xMove * delta * moveSpeed * Math.sqrt(2) / 200.0;
+			y += yMove * delta * moveSpeed * Math.sqrt(2) / 200.0;
 		}
-		if (y > Y_MAX) {
-			y = Y_MAX;
-			setDirection(0, 0);
-		} else if (y < Y_MIN) {
-			y = Y_MIN;
-			setDirection(0, 0);
+		if (x > X_MAX || x < X_MIN || y > Y_MAX || y < Y_MIN) {
+			collision = true;
 		}
 		int xMin = (int)Math.ceil(x - hitbox);
 		int yMin = (int)Math.ceil(y - hitbox);
@@ -128,22 +122,21 @@ public abstract class Player {
 		int iMax = (xMax+2500)/250;
 		int jMin = (yMin+2500)/250;
 		int jMax = (yMax+2500)/250;
-		boolean block = false;
 		final Team t = getTeam();
-		for (int i = iMin ; i < iMax && !block ; i++) {
-			for (int j = jMin ; j < jMax && !block ; j++) {
+		for (int i = iMin ; i < iMax && !collision; i++) {
+			for (int j = jMin ; j < jMax && !collision ; j++) {
 				for (Player p : team.getServer().getTile(i, j).getPlayers()) {
 					if (p.getTeam() != t && p.getSquareDistance(this) < 4 * hitbox * p.hitbox) {
-						block = true;
+						collision = true;
 						break;
 					}
 				}
 			}
 		}
-		if (block) {
+		if (collision) {
 			x = oldX;
 			y = oldY;
-			team.getServer().addEvent(new MoveEvent(this, 0, 0, hitDirection));
+			team.getServer().addEvent(new MoveEvent(this, 0, 0, hitDirection, true));
 		}
 		int i = (int)(Math.ceil(x + 2500)) / 250;
 		int j = (int)(Math.ceil(y + 2500)) / 250;
