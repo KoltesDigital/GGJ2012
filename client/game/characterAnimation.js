@@ -32,6 +32,8 @@ var sheets = [
 CharacterAnimation = function(character, team) {
 	lime.animation.KeyframeAnimation.call(this);
 
+	this.direction_ = constants.directions.right;
+	
 	var sheet = sheets[character][team];
 	var ss = new lime.SpriteSheet(constants.imagesPath + sheet.filename, sheet.metadata, lime.parser.ZWOPTEX);
 
@@ -39,7 +41,7 @@ CharacterAnimation = function(character, team) {
 		this.addFrame(ss.getFrame('frame_'+goog.string.padNumber(i, 4)+'.png'));
 	}
 	
-	this.spawn();
+	this.idle();
 };
 goog.inherits(CharacterAnimation, lime.animation.KeyframeAnimation);
 
@@ -51,37 +53,36 @@ CharacterAnimation.prototype.setDirection = function(direction) {
 	return this;
 };
 
-CharacterAnimation.prototype.setState = function(state) {
-	if (this.state_ == 'idle' && state == 'attacking') {
-		state = 'attackingFill';
-	} else if (this.state_ == 'attacking' && state == 'idle') {
-		state = 'idleFill';
-	}
-	this.state_ = state;
-	return this;
-};
-
 CharacterAnimation.prototype.setWalking = function(walking) {
 	this.walking_ = walking;
-	return this;
+};
+
+CharacterAnimation.prototype.idle = function() {
+	if (this.state_ == 'attacking') {
+		this.state_ = 'idleFill';
+	} else {
+		this.state_ = 'idle';
+	}
+	this.dead_ = false;
+	this.hit_ = null;
+};
+
+CharacterAnimation.prototype.attack = function() {
+	if (this.state_ == 'idle') {
+		this.state_ = 'attackingFill';
+	} else {
+		this.state_ = 'attacking';
+	}
 };
 
 CharacterAnimation.prototype.hit = function() {
 	this.hit_ = true;
-	return this;
 };
 
 CharacterAnimation.prototype.dead = function() {
 	this.dead_ = true;
 	this.direction_ = 0;
 	this.currentFrame_ = -1;
-	return this;
-};
-
-CharacterAnimation.prototype.spawn = function() {
-	this.direction_ = 0;
-	this.state_ = 'idle';
-	return this;
 };
 
 CharacterAnimation.prototype.updateAll = function(t, targets) {
@@ -109,7 +110,7 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 		if (this.dead_) {
 			animation = characterAnimations.death;
 		} else if (this.hit_) {
-			delete this.hit_;
+			this.hit_ = null;
 			animation = characterAnimations.hit;
 		} else if (this.state_ == 'attackingFill') {
 			animation = characterAnimations.fill;
@@ -128,7 +129,7 @@ CharacterAnimation.prototype.updateAll = function(t, targets) {
 		if (!this.walking_ || nextFrame >= animation.length) {
 			nextFrame = 0;
 		}
-
+		
 		var nextImage = this.frames_[animation[nextFrame] + 8 * (this.direction_ > 2 ? 1 : this.direction_)];
 
 		i = targets.length;
