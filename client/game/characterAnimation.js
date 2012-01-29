@@ -47,7 +47,7 @@ var sheets = [
               	   filename: 'archer_c.png',
               	   metadata: lime.ASSETS.archer.zwoptex
                  }
-                 ],
+                 ]
               ];
 
 CharacterAnimation = function(character, team) {

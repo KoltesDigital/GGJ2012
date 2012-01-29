@@ -113,7 +113,7 @@ game.setCurrentPlayer = function(id) {
 		
 		switch (e.keyCode) {
 		case 32: //space
-			if (game.currentPlayer.type == constants.characters.archer) {
+			if (game.currentPlayer.character == constants.characters.archer) {
 				if (cooldownTime <= Date.now()) {
 					cooldownTime = Date.now() + constants.cooldownArrow;
 					socket.send({
@@ -182,7 +182,7 @@ game.setCurrentPlayer = function(id) {
 	goog.events.listen(window, ['keyup'], function(e) {
 		switch (e.keyCode) {
 		case 32: //space
-			if (game.currentPlayer.type != constants.characters.archer) {
+			if (game.currentPlayer.character != constants.characters.archer) {
 				attacking = false;
 				game.currentPlayer.stopAttacking();
 				socket.send({
