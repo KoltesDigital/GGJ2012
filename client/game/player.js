@@ -4,28 +4,14 @@ goog.require('constants');
 goog.require('CharacterAnimation');
 goog.require('lime.animation.KeyframeAnimation');
 
-Player = function(id, character, team) {
+Player = function(id) {
 	this.id = id;
-	this.character = character;
-	this.team = team;
-
-	this.x = 0;
-	this.y = 0;
-	this.walking = false;
-	this.attacking = false;
-	this.direction = constants.directions.right;
-	this.directionX = 0;
-	this.directionY = 0;
-
-	this.sprite = new lime.Sprite().setAnchorPoint(0.203125, 0.48046875);
-	//this.animation = new lime.animation.KeyframeAnimation();
-	//this.animation.addFrame('images/fantassin_b.png');
-	this.animation = new CharacterAnimation(character, team).setDirection(this.direction);
-	this.sprite.runAction(this.animation);
+	this.living = false;
+	
+	this.sprite = new lime.Sprite();
 };
 
 Player.prototype.addToLayer = function(layer) {
-	console.log(this);
 	layer.appendChild(this.sprite);
 };
 
@@ -33,14 +19,70 @@ Player.prototype.removeFromLayer = function(layer) {
 	layer.removeChild(this.sprite);
 };
 
+Player.prototype.loadSprite = function() {
+	this.sprite.setAnchorPoint(0.203125, 0.48046875);
+	this.animation = new CharacterAnimation(this.character, this.team).setDirection(this.direction);
+	this.sprite.runAction(this.animation);
+};
+
+Player.prototype.unloadSprite = function() {
+	this.animation = null;
+};
+
+Player.prototype.spawn = function(x, y, character, team) {
+	this.x = this.targetX = x;
+	this.y = this.targetY = y;
+	
+	this.living = true;
+	this.direction = constants.directions.right;
+	this.directionX = 0;
+	this.directionY = 0;
+		
+	if (this.character != character || this.team != team) {
+		this.unloadSprite();
+		this.character = character;
+		this.team = team;
+		this.loadSprite();
+	}
+	
+	this.sprite.setPosition(x, y);
+	this.animation.idle();
+};
+
+Player.prototype.dead = function() {
+	this.animation.dead();
+	this.directionX = 0;
+	this.directionY = 0;
+	this.living = false;
+};
+
+Player.prototype.hit = function() {
+	this.animation.hit();
+};
+
+Player.prototype.startAttacking = function() {
+	this.animation.attack();
+};
+
+Player.prototype.stopAttacking = function() {
+	this.animation.idle();
+};
+
+Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
+	var step = constants.characterSpeed * (time + deltaTime - Date.now());
+	this.setDirection(dx, dy);
+	this.targetX = x + this.directionX * step;
+	this.targetY = y + this.directionY * step;
+};
+
 Player.prototype.setDirection = function(x, y, direction) {
-	this.walking = (x != 0 || y != 0);
+	var walking = (x != 0 || y != 0);
 	this.directionX = x;
 	this.directionY = y;
 
-	this.animation.setWalking(this.walking);
+	this.animation.setWalking(walking);
 	
-	if (this.walking) {
+	if (walking) {
 		var norm = Math.sqrt(x*x + y*y);
 		this.directionX /= norm;
 		this.directionY /= norm;
@@ -62,11 +104,6 @@ Player.prototype.setDirection = function(x, y, direction) {
 	}
 };
 
-Player.prototype.setPosition = function(x, y) {
-	this.targetX = x;
-	this.targetY = y;
-};
-
 Player.prototype.update = function(dt) {
 	var step = constants.characterSpeed * dt;
 	this.targetX += this.directionX * step;
@@ -83,30 +120,7 @@ Player.prototype.update = function(dt) {
 		this.x = this.targetX;
 		this.y = this.targetY;
 	}
+
+	this.animation.setWalking(dx != 0 || dy != 0);
 	this.sprite.setPosition(this.x, this.y);
-};
-
-Player.prototype.startAttacking = function() {
-	this.animation.setState('attacking');
-};
-
-Player.prototype.stopAttacking = function() {
-	this.animation.setState('idle');
-};
-
-Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
-	var step = constants.characterSpeed * (time + deltaTime - Date.now());
-	this.setDirection(dx, dy);
-	this.targetX = x + this.directionX * step;
-	this.targetY = y + this.directionY * step;
-};
-
-Player.prototype.hit = function() {
-	this.animation.hit();
-};
-
-Player.prototype.dead = function() {
-	this.animation.dead();
-	this.directionX = 0;
-	this.directionY = 0;
 };
