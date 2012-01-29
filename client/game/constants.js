@@ -1,5 +1,9 @@
 goog.provide('constants');
 
+goog.exportSymbol('constants.backgroundHeight', 500);
+
+goog.exportSymbol('constants.backgroundWidth', 500);
+
 goog.exportSymbol('constants.cameraGap', 100);
 
 goog.exportSymbol('constants.cameraRatio', 0.008);
