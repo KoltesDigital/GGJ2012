@@ -185,7 +185,7 @@ game.setCurrentPlayer = function(id) {
 		
 		this.ping = function() {
 			socket.send({
-				type: "move",
+				type: "ping",
 				data: Date.now()
 			});
 		};
@@ -259,11 +259,10 @@ game.start = function() {
 		this.bgSprites[i] = sprite;
 	}
 	
-	socket = new SocketMock(this, constants.server);
+	socket = new Socket(this, constants.server);
 
 	game.newCharacter = 0;
 	game.newTeam = 0;
-	game.changeCharacter();
 	
 	director.replaceScene(scene);
 };
