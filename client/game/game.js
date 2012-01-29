@@ -74,12 +74,17 @@ game.pong = function(obj) {
 	setTimeout(this.ping, constants.pingInterval);
 };
 
+game.collide = function() {
+	this.collideX = directionX;
+	this.collideY = directionY;
+};
+
 game.setCurrentPlayer = function(id) {
 	this.currentPlayer = this.players[id];
 	if (!this.currentPlayer) {
 		return;
 	}
-
+	
 	this.currentPlayer.removeFromLayer(game.playersLayer);
 	this.currentPlayer.addToLayer(game.currentPlayerLayer);
 	

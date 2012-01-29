@@ -91,6 +91,11 @@ Player.prototype.predicatePosition = function(time, x, y, dx, dy) {
 	this.targetY = y - this.directionY * step;
 };
 
+Player.prototype.setPosition = function(x, y) {
+	this.targetX = this.x = x;
+	this.targetY = this.y = y;
+};
+
 Player.prototype.setDirection = function(x, y, direction) {
 	var walking = (x != 0 || y != 0);
 	this.directionX = x;

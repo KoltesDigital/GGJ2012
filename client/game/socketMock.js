@@ -21,6 +21,9 @@ SocketMock.prototype.init = function() {
 		var dx = x - player.x;
 		var dy = y - player.y;
 		player.predicatePosition(Date.now() - 50 + (Math.random() - 0.5) * 100, x, y, dx, dy);
+		setTimeout(function() {
+			player.setDirection(0, 0);
+		}, 1000);
 	}, 2000);
 	
 };

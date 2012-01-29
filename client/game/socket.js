@@ -61,7 +61,11 @@ Socket.prototype.init = function() {
 			var player = game.players[obj.id];
 			if (player) {
 				if (player == game.currentPlayer) {
-					
+					if (obj.collision) {
+						player.setPosition(obj.x, obj.y);
+						player.setDirection(0, 0);
+						game.collide();
+					}
 				} else {
 					player.predicatePosition(obj.ts, obj.x, obj.y, obj.xMove, obj.yMove);
 				}
