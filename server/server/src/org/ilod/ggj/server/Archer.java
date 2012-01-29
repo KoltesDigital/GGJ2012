@@ -3,7 +3,7 @@ package org.ilod.ggj.server;
 import net.tootallnate.websocket.WebSocket;
 
 public class Archer extends Player {
-	private static final int ALLONGE = 400;
+	private static final int ALLONGE = 1000;
 	private static final int ARROW_SPEED = 60;
 	private static final int HITBOX = 16;
 	private static final int HP = 300;
@@ -25,7 +25,7 @@ public class Archer extends Player {
 	
 	@Override
 	public void arrow(int power) {
-		this.getTeam().getServer().addArrow(new Arrow(this.getTeam(), this.x, this.y, this.xMove, this.yMove, ARROW_SPEED, DOMMAGES, ALLONGE));
+		this.getTeam().getServer().addArrow(new Arrow(this.getTeam(), this.x, this.y, this.xMoveOld, this.yMoveOld, ARROW_SPEED, DOMMAGES, ALLONGE));
 	}
 
 }

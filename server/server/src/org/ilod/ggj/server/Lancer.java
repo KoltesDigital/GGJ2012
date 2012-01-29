@@ -1,7 +1,7 @@
 package org.ilod.ggj.server;
 
 public class Lancer extends Player {
-	private static final int ALLONGE = 64;
+	private static final int ALLONGE = 128;
 	public static final int HITBOX = 16;
 	private static final int HP = 300;
 	private static final int DOMMAGES = 200;
@@ -26,6 +26,7 @@ public class Lancer extends Player {
 		final int xHit = (hitDirection == 3 ? -1 : hitDirection == 1 ? 1 : 0);
 		for (Player p : this.getTeam().getServer().getPlayers()) {
 			if (p.getTeam() == this.getTeam()) continue;
+			if (!p.isHitting() && (p instanceof Lancer)) continue;
 			int d = ALLONGE + p.getHitbox();
 			if (this.getSquareDistance(p) < d*d) {
 				double bc = y - p.y;
@@ -45,7 +46,7 @@ public class Lancer extends Player {
 						} else {
 							ok = (a < -Math.PI / 4 && a > -3 * Math.PI / 4);
 						}
-					} else if (xHit > 0) {
+					} else if (xHit < 0) {
 						if (yHit == 0) {
 							ok = (a < Math.PI / 4 && a > -Math.PI / 4);
 						} else if (yHit < 0) {
@@ -55,7 +56,7 @@ public class Lancer extends Player {
 						}
 					} else {
 						if (yHit == 0) {
-							ok = (a > 3 * Math.PI / 4 && a < -3 * Math.PI / 4);
+							ok = (a > 3 * Math.PI / 4 || a < -3 * Math.PI / 4);
 						} else if (yHit > 0) {
 							ok = (a > Math.PI / 2);
 						} else {

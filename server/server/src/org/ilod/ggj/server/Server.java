@@ -94,7 +94,7 @@ public class Server extends WebSocketServer {
 				Player p = players.get(conn);
 				if (p != null) p.kill();
 			} else if ("arrow".equals(s)) {
-				events.add(new ArrowEvent(players.get(conn), jo.getInt("power")));
+				events.add(new ArrowEvent(players.get(conn), 0));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

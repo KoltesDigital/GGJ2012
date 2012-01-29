@@ -11,13 +11,17 @@ public abstract class Player {
 	private static final int Y_MIN = -2480;
 	private static final int Y_MAX =  2480;
 	private final int hitbox;
-	protected double x = (int)(Math.random() * 4960 - 2480);
-	protected double y = (int)(Math.random() * 4960 - 2480);
+	//protected double x = (int)(Math.random() * 4960 - 2480);
+	//protected double y = (int)(Math.random() * 4960 - 2480);
+	protected double x = (int)(Math.random() * 100);
+	protected double y = (int)(Math.random() * 100);
 	private final int id;
 	private final Team team;
 	private final int moveSpeed;
 	protected int xMove;
 	protected int yMove;
+	protected int xMoveOld = 1;
+	protected int yMoveOld;
 	protected int hitDirection = 0;
 	private boolean dead = false;
 	private final Client c;
@@ -68,6 +72,10 @@ public abstract class Player {
 	
 	public void setDirection(int xMove, int yMove) {
 		if (dead) return;
+		if (xMove != 0 || yMove != 0) {
+			xMoveOld = xMove;
+			yMoveOld = yMove;
+		}
 		this.xMove = xMove;
 		this.yMove = yMove;
 	}
@@ -114,7 +122,7 @@ public abstract class Player {
 		if (x > X_MAX || x < X_MIN || y > Y_MAX || y < Y_MIN) {
 			collision = true;
 		}
-		int xMin = (int)Math.ceil(x - hitbox);
+		/*int xMin = (int)Math.ceil(x - hitbox);
 		int yMin = (int)Math.ceil(y - hitbox);
 		int xMax = (int)Math.floor(x - hitbox);
 		int yMax = (int)Math.floor(y - hitbox);
@@ -132,20 +140,20 @@ public abstract class Player {
 					}
 				}
 			}
-		}
+		}*/
 		if (collision) {
-			System.out.println("COLLISION!!!");
 			x = oldX;
 			y = oldY;
 			team.getServer().addEvent(new MoveEvent(this, 0, 0, hitDirection, true));
-		}
-		int i = (int)(Math.ceil(x + 2500)) / 250;
-		int j = (int)(Math.ceil(y + 2500)) / 250;
-		int iOld = (int)(Math.ceil(oldX + 2500)) / 250;
-		int jOld = (int)(Math.ceil(oldY + 2500)) / 250;
-		if (iOld != i || jOld != j) {
-			team.getServer().getTile(iOld, jOld).removePlayer(this);
-			team.getServer().getTile(i, j).addPlayer(this);
+		} else {
+			int i = (int)(Math.ceil(x + 2500)) / 250;
+			int j = (int)(Math.ceil(y + 2500)) / 250;
+			int iOld = (int)(Math.ceil(oldX + 2500)) / 250;
+			int jOld = (int)(Math.ceil(oldY + 2500)) / 250;
+			if (iOld != i || jOld != j) {
+				team.getServer().getTile(iOld, jOld).removePlayer(this);
+				team.getServer().getTile(i, j).addPlayer(this);
+			}
 		}
 		if (hitten) {
 			JSONObject jo = new JSONObject();

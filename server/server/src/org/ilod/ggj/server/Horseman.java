@@ -1,9 +1,7 @@
 package org.ilod.ggj.server;
 
-import net.tootallnate.websocket.WebSocket;
-
 public class Horseman extends Player {
-	private static final int ALLONGE = 32;
+	private static final int ALLONGE = 64;
 	private static final int HITBOX = 16;
 	private static final int HP = 300;
 	private static final int DOMMAGES = 200;
@@ -43,22 +41,22 @@ public class Horseman extends Player {
 					if (xHit == 0) {
 						if (yHit == 0) {
 							
-						} else if (yHit > 0) {
+						} else if (yHit < 0) {
 							ok = (a > Math.PI / 4 && a < 3 * Math.PI / 4);
 						} else {
 							ok = (a < -Math.PI / 4 && a > -3 * Math.PI / 4);
 						}
-					} else if (xHit > 0) {
+					} else if (xHit < 0) {
 						if (yHit == 0) {
 							ok = (a < Math.PI / 4 && a > -Math.PI / 4);
-						} else if (yHit > 0) {
+						} else if (yHit < 0) {
 							ok = (a > 0 && a < Math.PI / 2);
 						} else {
 							ok = (a < 0 && a > -Math.PI / 2);
 						}
 					} else {
 						if (yHit == 0) {
-							ok = (a > 3 * Math.PI / 4 && a < -3 * Math.PI / 4);
+							ok = (a > 3 * Math.PI / 4 || a < -3 * Math.PI / 4);
 						} else if (yHit > 0) {
 							ok = (a > Math.PI / 2);
 						} else {
