@@ -77,9 +77,14 @@ Socket.prototype.init = function() {
 			break;
 			
 		case "spawn":
-			var player = new Player(obj.id);
-			game.addPlayer(player);
-			player.spawn(obj.x, obj.y, obj.work, obj.team);
+			var player = game.players[obj.id];
+			if (!player) {
+				player = new Player(obj.id);
+				player.spawn(obj.x, obj.y, obj.work, obj.team);
+				game.addPlayer(player);
+			} else {
+				player.spawn(obj.x, obj.y, obj.work, obj.team);
+			}
 			break;
 		}
 	};

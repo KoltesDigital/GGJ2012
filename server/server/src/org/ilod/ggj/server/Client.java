@@ -12,8 +12,7 @@ public class Client {
 		this.ws = ws;
 		this.id = id;
 		this.team = team;
-		team.addClient();
-		// this.work = (int)(Math.random()*3);
+		this.work = (int)(Math.random()*3);
 	}
 	
 	public void setWork(int work) {

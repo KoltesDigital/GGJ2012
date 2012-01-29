@@ -261,14 +261,14 @@ game.start = function() {
 
 	deltaTime = 50;
 
-	socket = new SocketMock(this, constants.server);
+	socket = new Socket(this, constants.server);
 	socket.init();
 
 	goog.events.listenOnce(window, ['keydown'], function(e) {
 		switch (e.keyCode) {
 		case 32: //space
 			socket.send({
-				type: "spawn"
+				type: "start"
 			});
 			var fadehalf = new lime.animation.FadeTo(0).setDuration(1);
 			game.welcomeSprite.runAction(fadehalf);

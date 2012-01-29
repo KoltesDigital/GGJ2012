@@ -55,8 +55,8 @@ public class Arrow {
 		int iMax = (int) (Math.ceil(x + 2500 + Lancer.HITBOX)) / 250;
 		int jMin = (int) (Math.ceil(y + 2500 - Lancer.HITBOX)) / 250;
 		int jMax = (int) (Math.ceil(y + 2500 + Lancer.HITBOX)) / 250;
-		for (int i = iMin; i < iMax; i++) {
-			for (int j = jMin; j < jMax; j++) {
+		for (int i = iMin; i <= iMax; i++) {
+			for (int j = jMin; j <= jMax; j++) {
 				for (Player p : team.getServer().getTile(i, j).getPlayers()) {
 					if (p.getTeam() != team
 							&& p.getSquareDistance(x, y) < p.getHitbox()

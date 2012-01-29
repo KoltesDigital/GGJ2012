@@ -1,10 +1,8 @@
 package org.ilod.ggj.server;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,9 +54,8 @@ public class Server extends WebSocketServer {
 	@Override
 	public void onClientClose(WebSocket conn) {
 		Player p = players.remove(conn);
-		p.disconnect();
-		addEvent(new DisconnectEvent(p.getClient(), this));
-		p.getTeam().removeClient();
+		if (p != null) p.disconnect();
+		addEvent(new DisconnectEvent(clients.get(conn), this));
 	}
 	
 	public void removeClient(Client c) {
@@ -80,6 +77,11 @@ public class Server extends WebSocketServer {
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}
+			} else if ("start".equals(s)) {
+				Client c = clients.get(conn);
+				events.add(new ListServEvent(c, this));
+				events.add(new SpawnEvent(c, 0));
+				events.add(new MyIdEvent(c));
 			} else if ("move".equals(s)) {
 				events.add(new MoveEvent(players.get(conn), jo.getInt("xMove"), jo.getInt("yMove"), jo.getInt("direction")));
 			} else if ("startHit".equals(s)) {
@@ -91,6 +93,8 @@ public class Server extends WebSocketServer {
 				c.setWork(jo.getInt("character"));
 				Player p = players.get(conn);
 				if (p != null) p.kill();
+			} else if ("arrow".equals(s)) {
+				events.add(new ArrowEvent(players.get(conn), jo.getInt("power")));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -101,9 +105,6 @@ public class Server extends WebSocketServer {
 	public void onClientOpen(WebSocket conn) {
 		Client c = new Client(conn, id.getAndIncrement(), getTeamToRenforce());
 		clients.put(conn, c);
-		events.add(new ListServEvent(c, this));
-		events.add(new SpawnEvent(c, 0));
-		events.add(new MyIdEvent(c));
 	}
 	
 	@Override
