@@ -7,8 +7,9 @@ Arrow = function(id, x, y, sx, sy) {
 	this.id = id;
 	this.x = x;
 	this.y = y;
-	this.sx = sx;
-	this.sy = sy;
+	var norm = Math.sqrt(sx*sx + sy*sy) / (2 * constants.characterSpeed);
+	this.sx = sx / norm;
+	this.sy = sy / norm;
 	
 	this.sprite = new lime.Sprite().
 		setFill(constants.imagesPath + 'fleche.png').

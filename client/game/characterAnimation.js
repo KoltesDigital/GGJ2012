@@ -3,6 +3,10 @@ goog.provide('CharacterAnimation');
 goog.require('goog.events');
 goog.require('lime.ASSETS.fantassin_b.zwoptex');
 goog.require('lime.ASSETS.fantassin_c.zwoptex');
+goog.require('lime.ASSETS.chevalier_b.zwoptex');
+goog.require('lime.ASSETS.chevalier_c.zwoptex');
+goog.require('lime.ASSETS.archer_b.zwoptex');
+goog.require('lime.ASSETS.archer_c.zwoptex');
 goog.require('lime.parser.ZWOPTEX');
 goog.require('lime.SpriteSheet');
 goog.require('lime.animation.KeyframeAnimation');
@@ -19,14 +23,34 @@ var characterAnimations = {
 var sheets = [
               [
                {
-            	   filename: 'fantassin_c.png',
-            	   metadata: lime.ASSETS.fantassin_c.zwoptex
+            	   filename: 'fantassin_b.png',
+            	   metadata: lime.ASSETS.fantassin_b.zwoptex
                },
                {
             	   filename: 'fantassin_c.png',
             	   metadata: lime.ASSETS.fantassin_c.zwoptex
                }
-               ]
+               ],
+               [
+                {
+             	   filename: 'chevalier_b.png',
+             	   metadata: lime.ASSETS.chevalier_b.zwoptex
+                },
+                {
+             	   filename: 'chevalier_c.png',
+             	   metadata: lime.ASSETS.chevalier_c.zwoptex
+                }
+                ],
+                [
+                 {
+              	   filename: 'archer_b.png',
+              	   metadata: lime.ASSETS.archer_b.zwoptex
+                 },
+                 {
+              	   filename: 'archer_c.png',
+              	   metadata: lime.ASSETS.archer_c.zwoptex
+                 }
+                 ],
               ];
 
 CharacterAnimation = function(character, team) {

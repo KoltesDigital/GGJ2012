@@ -8,17 +8,12 @@ SocketMock = function(game, server) {
 };
 
 SocketMock.prototype.init = function() {
+	/*
 	for (var i = 1; i < 5; ++i) {
 		var player = new Player(i, 0, 1);
 		player.spawn((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, 0, 1);
 		game.addPlayer(player);
 	}
-	
-	var player = new Player(0);
-	player.spawn((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, 0, 1);
-	game.addPlayer(player);
-	
-	game.setCurrentPlayer(0);
 	
 	setInterval(function() {
 		var player = game.players[Math.floor(Math.random() * 4) + 1];
@@ -27,8 +22,13 @@ SocketMock.prototype.init = function() {
 		var dx = x - player.x;
 		var dy = y - player.y;
 		player.predicatePosition(Date.now() - deltaTime + (Math.random() - 0.5) * 100, x, y, dx, dy);
-		console.log('plop');
 	}, 2000);
+	*/
+	var player = new Player(0);
+	player.spawn((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, 1, 1);
+	game.addPlayer(player);
+	
+	game.setCurrentPlayer(0);
 };
 
 SocketMock.prototype.send = function(data) {
@@ -57,5 +57,8 @@ SocketMock.prototype.send = function(data) {
 	case "startAttack":
 		this.game.dead(1);
 		break;
+		
+	case "arrow":
+		
 	}
 };
