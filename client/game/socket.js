@@ -73,7 +73,6 @@ Socket.prototype.init = function() {
 			break;
 			
 		case "spawn":
-			console.log("ear");
 			var player = game.players[obj.id];
 			if (!player) {
 				player = new Player(obj.id);
